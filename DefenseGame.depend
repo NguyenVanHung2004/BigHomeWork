@@ -1,0 +1,53 @@
+# depslib dependency file v1.0
+1678552312 source:d:\c++\game\defensegame\defensegame\entity.cpp
+	"Entity.h"
+	<SDL.h>
+	<SDL_image.h>
+
+1678539016 d:\c++\game\defensegame\defensegame\entity.h
+	<SDL.h>
+	<SDL_image.h>
+
+1679146706 source:d:\c++\game\defensegame\defensegame\main.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	<bits/stdc++.h>
+	<vector>
+	"RenderWindow.h"
+	"Entity.h"
+	"soilder.h"
+	"Landmine.h"
+
+1678714704 d:\c++\game\defensegame\defensegame\renderwindow.h
+	<SDL.h>
+	<SDL_ttf.h>
+	"Entity.h"
+
+1678714807 source:d:\c++\game\defensegame\defensegame\renderwindow.cpp
+	<iostream>
+	<SDL.h>
+	"RenderWindow.h"
+	"Entity.h"
+
+1679035421 source:d:\c++\game\defensegame\defensegame\soilder.cpp
+	<iostream>
+	"soilder.h"
+	"Landmine.h"
+	<vector>
+
+1678810125 d:\c++\game\defensegame\defensegame\soilder.h
+	"Entity.h"
+	"RenderWindow.h"
+	"Landmine.h"
+	<vector>
+
+1678806604 source:d:\c++\game\defensegame\defensegame\landmine.cpp
+	"Landmine.h"
+
+1678889949 d:\c++\game\defensegame\defensegame\landmine.h
+	"Entity.h"
+	"RenderWindow.h"
+	<vector>
+
