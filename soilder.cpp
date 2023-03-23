@@ -15,6 +15,7 @@ void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &s
             {
                     if ( getDeath() == false)
                         soildersRemain-= 1;
+
                     setDeath ( true );
 
                 }

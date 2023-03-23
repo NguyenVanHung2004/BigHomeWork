@@ -95,7 +95,7 @@ SDL_Texture* RenderWindow :: loadTexture( const char* file_path)
 		SDL_FreeSurface(surfaceMessage);
 	 	SDL_DestroyTexture(message);
     }
-    void RenderWindow::display( )
+    void RenderWindow::display()
     {
        SDL_RenderPresent(renderer);
     }

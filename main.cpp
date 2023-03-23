@@ -1,10 +1,13 @@
 
-#include<SDL.h>
-#include<SDL_image.h>
-#include<SDL_ttf.h>
-#include<SDL_mixer.h>
-#include<bits/stdc++.h>
-#include<vector>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+
 #include"RenderWindow.h"
 #include"Entity.h"
 #include"soilder.h"
@@ -24,9 +27,10 @@ bool init()
 }
 
     bool SDLinit = init();
+
     RenderWindow window("Defense",960, 640);
 
-    SDL_Texture* bgTexture =  window.loadTexture("Images/background.png");
+    SDL_Texture* bgTexture =  window.loadTexture("Images/backgroundtemp.png");
     SDL_Texture* logoTexture =  window.loadTexture("Images/logo.png");
     SDL_Texture* bg01Texture = window.loadTexture("Images/bg03.png");
     SDL_Texture* soilderTexture = window.loadTexture("Images/soilder03.png");
@@ -52,11 +56,18 @@ bool init()
     SDL_Texture* homeButton02ClickTexture = window.loadTexture( "Images/homeButton02Click.png");
     SDL_Texture* heartTexture = window.loadTexture("Images/heart.png");
     SDL_Texture* non_heartTexture = window.loadTexture("Images/heart_non.png");
-
-
+    SDL_Texture* levelUpTexture = window.loadTexture("Images/leveluptemp.png");
+    SDL_Texture* star1Texture = window.loadTexture("Images/1star.png");
+    SDL_Texture* star2Texture = window.loadTexture("Images/2stars.png");
+    SDL_Texture* star3Texture = window.loadTexture("Images/3stars.png");
+    SDL_Texture* nextButtonTexture = window.loadTexture("Images/nextButton.png");
+    SDL_Texture* nextButtonClickTexture = window.loadTexture("Images/nextButtonClick.png");
     TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf" , 12);
     TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf" , 24);
     TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf" , 48);
+
+
+    Mix_Chunk* explosion = Mix_LoadWAV("Sound/explosion.mp3");
     SDL_Color white = { 255, 255, 255 };
     SDL_Color green = { 0, 255, 0 };
     SDL_Color yellow = { 255 ,0,0};
@@ -67,7 +78,7 @@ bool init()
     bool mouseDown = false;
     int num_mine = 3 ;
     int frame = 0 ;
-    // status:  0: start screen , 1 : in game , -1 : lose ;
+    // status:  0: start screen , 1 : in game ,  2: next level   , -1 : lose ;
     int status = 0 ;
     int level = 0;
     int heal_point = 3;
@@ -126,7 +137,8 @@ std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
 }
 void loadlevel( int level )
 {
-     window.render(0,0, bgTexture);
+
+    window.render(0,0, bgTexture);
     soildersIdle = loadSoilders(level, soilderIdleTexture);
     soilders = loadSoilders(level, soilderTexture);
     soildersRemain = soildersIdle.size();
@@ -141,7 +153,7 @@ void loadlevel( int level )
 }
 const char* getLevelText(int level)
 {
-     std::string s = std::to_string(level);
+     std::string s = std::to_string(level +1 );
     s = "Level: " + s;
     return s.c_str();
 
@@ -208,7 +220,7 @@ void update()
            }
         if ( SDL_GetTicks() - startTime >=  7000 && SDL_GetTicks() - startTime <= 17000)
             {
-            window.renderText( 140,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
+            window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
 
             if ( num_mine > 0 )
                 {
@@ -219,7 +231,7 @@ void update()
                     {
                     window.render( (x/32) * 32 +5 , (y /33) *33 + 10 , landminetempTexture) ;
                     window.renderText( (x/32) * 32 +5  + 30 , (y /33) *33 + 10 , getNumMineRemainText( num_mine) , font12, green );
-                    if (mouseDown == true )
+                    if ( mouseDown == true )
                          {
                           landmines[num_mine-1].setPos( x/32 * 32 +5, (y /33) *33 + 10 );
                           num_mine--;
@@ -249,6 +261,7 @@ void update()
                     if ( s.animationDone  == false)
                         {
                         s.tempFrame = 6000 ;
+                         Mix_PlayChannel( -1, explosion , 1);
                         s.animationDone = true ;
                         }
                     s.setVelocity( 0, 0 );
@@ -277,8 +290,9 @@ void update()
         // win status , next level
         if ( soildersRemain <= 0  && heal_point >= 1)
             {
-                level++;
-                loadlevel(level);
+             //   level++;
+               // loadlevel(level);
+               status = 2;
             }
 
         }
@@ -387,10 +401,58 @@ void graphic()
             }
         }
     }
+    if ( status == 2 )
+    {
+
+        window.render(  180 , 100  , levelUpTexture);
+        switch( heal_point)
+        {
+            case 1:
+                window.render( 355  , 200 , star1Texture );
+                break;
+            case 2:
+                window.render( 355  , 200 , star2Texture );
+                break;
+            case 3 :
+                window.render( 355  , 200 , star3Texture );
+                break;
+        }
+
+        window.render ( 450 , 350 , nextButtonTexture );
+        bool nextButtonInside = false;
+        int x, y;
+        SDL_GetMouseState( &x, &y);
+        if (   x>= 450  && x<= 500 && y >= 350 && y <=400 )
+        {
+            nextButtonInside =true;
+            window.render( 450, 350 ,  nextButtonClickTexture);
+        }
+        while (SDL_PollEvent(&event))
+                    {
+                        switch(event.type)
+                        {
+                        case SDL_QUIT:
+                            gameRunning = false;
+                            break;
+                        case SDL_MOUSEBUTTONDOWN:
+                            if( nextButtonInside && event.button.button ==  SDL_BUTTON_LEFT)
+                            {
+                                // next level
+                                level++;
+                                loadlevel(level);
+                                status = 1;
+
+                            }
+
+                            break;
+                        }
+                    }
+    }
+
+
 }
 void starScreen ()
 {
-
 
         window.clear();
         window.render(0, 0, bgTexture);
@@ -473,6 +535,7 @@ int main(int argc, char* args[])
     setExploClip( exploClips);
     loadlevel(0);
     frame = 0;
+
     while(gameRunning)
     {
         if (status == 0)
@@ -487,6 +550,7 @@ int main(int argc, char* args[])
 
         if( frame / 1000 >= 5)
             frame = 0;
+
 
 
     }

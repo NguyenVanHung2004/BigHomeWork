@@ -8,13 +8,15 @@
 	<SDL.h>
 	<SDL_image.h>
 
-1679146706 source:d:\c++\game\defensegame\defensegame\main.cpp
+1679557033 source:d:\c++\game\defensegame\defensegame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<SDL_mixer.h>
-	<bits/stdc++.h>
+	<iostream>
 	<vector>
+	<string>
+	<fstream>
 	"RenderWindow.h"
 	"Entity.h"
 	"soilder.h"
@@ -25,13 +27,13 @@
 	<SDL_ttf.h>
 	"Entity.h"
 
-1678714807 source:d:\c++\game\defensegame\defensegame\renderwindow.cpp
+1679306596 source:d:\c++\game\defensegame\defensegame\renderwindow.cpp
 	<iostream>
 	<SDL.h>
 	"RenderWindow.h"
 	"Entity.h"
 
-1679035421 source:d:\c++\game\defensegame\defensegame\soilder.cpp
+1679499585 source:d:\c++\game\defensegame\defensegame\soilder.cpp
 	<iostream>
 	"soilder.h"
 	"Landmine.h"
