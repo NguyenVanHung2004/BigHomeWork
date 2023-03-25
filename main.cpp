@@ -62,6 +62,9 @@ bool init()
     SDL_Texture* star3Texture = window.loadTexture("Images/3stars.png");
     SDL_Texture* nextButtonTexture = window.loadTexture("Images/nextButton.png");
     SDL_Texture* nextButtonClickTexture = window.loadTexture("Images/nextButtonClick.png");
+    SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
+    SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
+    SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
     TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf" , 12);
     TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf" , 24);
     TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf" , 48);
@@ -84,6 +87,7 @@ bool init()
     int heal_point = 3;
     int soildersRemain = 0 ;
     bool displayHow2play = false;
+    bool digging = false;
      Uint32 startTime = 0;
 // load soilder
     std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
@@ -130,7 +134,7 @@ std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
 
         std:: vector<Landmine> temp;
         for (int i = 0 ; i < num_mine +3; i ++)
-            temp.push_back( Landmine(Vector2f(-100, -100), tex));
+            temp.push_back( Landmine(Vector2f(-200, -200), tex));
         return temp;
 
 
@@ -183,7 +187,7 @@ void update()
     currentTick = SDL_GetPerformanceCounter();
     deltaTime = (double)((currentTick - lastTick)*1000 / (double)SDL_GetPerformanceFrequency() );
 
-     while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&event))
     {
         switch(event.type)
         {
@@ -211,6 +215,7 @@ void update()
     {
 
         SDL_Rect* currentFrame = &runClips[frame / 1000];
+        // watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
            {
                 for( Soilder& s : soildersIdle)
@@ -218,27 +223,52 @@ void update()
                 window.renderText(140,130,"The enemies are coming, watch carefully!" , font24 , white );
 
            }
+
+        // preparing: set position of landmines
         if ( SDL_GetTicks() - startTime >=  7000 && SDL_GetTicks() - startTime <= 17000)
             {
-            window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
 
-            if ( num_mine > 0 )
+            window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
+            window.render(770, 1, shovelTexture);
+            int x ,y;
+            SDL_GetMouseState( &x, &y);
+
+            if ( num_mine > 0  && digging == false)
                 {
-                int x = 0 ;
-                int y =  0;
-                SDL_GetMouseState( &x, &y);
                 if  (  y >= 170 && y  <= 590 && x <= 800 )
                     {
                     window.render( (x/32) * 32 +5 , (y /33) *33 + 10 , landminetempTexture) ;
                     window.renderText( (x/32) * 32 +5  + 30 , (y /33) *33 + 10 , getNumMineRemainText( num_mine) , font12, green );
-                    if ( mouseDown == true )
+                    for( Landmine& l : landmines)
+                        if ( mouseDown == true && l.getPos().x== -200 && l.getPos().y == -200 )
                          {
-                          landmines[num_mine-1].setPos( x/32 * 32 +5, (y /33) *33 + 10 );
+                        l.setPos( x/32 * 32 +5, (y /33) *33 + 10 );
                           num_mine--;
-                           mouseDown = false;
+                          mouseDown = false;
+                          break;
                          }
                     }
                 }
+            if ( digging )
+            {
+                window.render( x  , y  - 40  , shovel02Texture);
+                window.render( 770 , 1, shovelClickTexture);
+                 if ( mouseDown == true )
+                         {
+                          for( Landmine& l : landmines)
+                                if( x >= l.getPos().x && x<= l.getPos().x + 25
+                                   && y >=  l.getPos().y && y <=  l.getPos().y +25 )
+                                    {
+                                    l.setPos( -200, -200);
+                                    num_mine++;
+                                    }
+                          mouseDown = false;
+                        }
+
+            }
+
+
+
              }
 
         for( Landmine& l : landmines)
@@ -250,7 +280,6 @@ void update()
         for( Soilder& s : soilders)
         {
             s.update(landmines, heal_point , soildersRemain,deltaTime );
-
             if ( s.getDeath() == false)
                     window.render(currentFrame,s);
 
@@ -261,7 +290,7 @@ void update()
                     if ( s.animationDone  == false)
                         {
                         s.tempFrame = 6000 ;
-                         Mix_PlayChannel( -1, explosion , 1);
+                        Mix_PlayChannel( -1 , explosion ,0);
                         s.animationDone = true ;
                         }
                     s.setVelocity( 0, 0 );
@@ -302,18 +331,24 @@ void update()
 void graphic()
 {   window.clear();
     window.render(0,0, bgTexture);
+     window.render( 5 ,5  , homeButton02Texture);
     window.renderText( 400, 0, getLevelText(level) , font24, white);
-    if ( status ==1 )
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+     bool home02Inside = false;
+     bool digInside = false;
+    if ( status == 1 )
     {
-        window.renderText( 400, 0, getLevelText(level) , font24, white);
-        bool home02Inside = false;
-        int x, y;
-        SDL_GetMouseState(&x, &y);
-        if  ( x>= 5 && x<= 30 && y >= 5 && y <= 30)
+        if  ( x>= 5 && x<= 30 && y >= 5 && y <= 30  )
             {
-                std::cout << 1;
                 home02Inside = true;
                 window.render( 5,5, homeButton02ClickTexture);
+            }
+        if  ( x>= 770 && x<= 810  && y >= 1 && y <= 42   )
+            {
+                digInside = true;
+            }
+        if (home02Inside || digInside)
                 while (SDL_PollEvent(&event))
                     {
                         switch(event.type)
@@ -327,11 +362,19 @@ void graphic()
                                 loadlevel(0);
                                 status = 0;
                                 }
+                            else if ( digInside && event.button.button == SDL_BUTTON_LEFT && digging == false)
+                                {
+                                    digging = true;
+                                }
+                            else if  ( digInside && event.button.button == SDL_BUTTON_LEFT && digging)
+                                {
+                                    digging = false;
+                                }
+                            break;
                         }
                     }
-            }
-        else
-            window.render( 5 ,5  , homeButton02Texture);
+
+
         switch( heal_point )
         {
             case 0:
@@ -355,7 +398,9 @@ void graphic()
                 window.render(920, 1, heartTexture );
                 break;
         }
-    }
+}
+
+
     if ( status == -1 )
     {
         window.render( 0,0, gameoverTexture);
@@ -363,9 +408,6 @@ void graphic()
         window.render( 500  , 300  , replayButtonTexture);
         bool homeInside = false;
         bool replayInside = false;
-        int x ;    int y ;
-        SDL_GetMouseState(&x, & y);
-
         if ( x >= 400 && x <= 450 && y>= 300 && y <= 350 )
             homeInside = true;
         if( homeInside)
@@ -420,8 +462,6 @@ void graphic()
 
         window.render ( 450 , 350 , nextButtonTexture );
         bool nextButtonInside = false;
-        int x, y;
-        SDL_GetMouseState( &x, &y);
         if (   x>= 450  && x<= 500 && y >= 350 && y <=400 )
         {
             nextButtonInside =true;
@@ -518,7 +558,6 @@ void starScreen ()
                         displayHow2play = true ;
                 if (event.button.button == SDL_BUTTON_LEFT && okInside && displayHow2play)
                         displayHow2play = false;
-
                 if (event.button.button == SDL_BUTTON_LEFT && quitInside)
                     gameRunning = false;
                 break;
@@ -545,7 +584,7 @@ int main(int argc, char* args[])
         graphic();
         update();
         }
-
+        std::cout << num_mine << std::endl;
         frame += int( 8*deltaTime);
 
         if( frame / 1000 >= 5)
