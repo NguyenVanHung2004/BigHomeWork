@@ -44,13 +44,22 @@ SDL_Texture* RenderWindow :: loadTexture( const char* file_path)
 	SDL_RenderCopy(renderer, p_entity.getTex(), &src, &dst);
 
   }
-  void RenderWindow::render( SDL_Rect* clip , Entity& p_entity )
+  void RenderWindow::renderFrame( SDL_Rect* clip , Entity& p_entity )
   {
 
         SDL_Rect renderQuad = { p_entity.getPos().x, p_entity.getPos().y , clip->w , clip->h};
 
 
     SDL_RenderCopy(renderer, p_entity.getTex(), clip , &renderQuad );
+  }
+
+    void RenderWindow::renderBg( SDL_Texture* p_tex , SDL_Rect* src  )
+  {
+
+        SDL_Rect renderQuad = {0, 0 , src->w , src->h};
+
+
+    SDL_RenderCopy(renderer, p_tex , src , &renderQuad );
   }
 
 
