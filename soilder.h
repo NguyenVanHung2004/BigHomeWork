@@ -20,7 +20,7 @@ class Soilder : public Entity
 
     private:
         Vector2f velocity{0.03,0};
-        bool death ;
+        bool death =false ;
 
 };
 

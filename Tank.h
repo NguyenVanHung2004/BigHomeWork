@@ -1,0 +1,25 @@
+#pragma once
+#include"Entity.h"
+#include"Soilder.h"
+#include"RenderWindow.h"
+#include"Landmine.h"
+#include<vector>
+
+
+class Tank : public Soilder
+{
+    public:
+        Tank( Vector2f p_pos, SDL_Texture* p_tex );
+        void set_heal( int p_heal );
+        int get_heal();
+        void updateTank(std::vector<Landmine> landmines,int &heal_point  , int &soildersRemain , double deltaTime);
+        bool getDamage();
+        void setDamage( bool p_damage);
+    private:
+        int heal  ;
+        bool damage = false;
+};
+
+
+static SDL_Rect tankClips[ 5 ];
+void setTankClip(SDL_Rect tankClips[] );

@@ -12,6 +12,7 @@
 #include"Entity.h"
 #include"soilder.h"
 #include"Landmine.h"
+#include"Tank.h"
 
 
 bool init()
@@ -67,6 +68,8 @@ SDL_Texture* nextButtonClickTexture = window.loadTexture("Images/nextButtonClick
 SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
 SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
 SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
+SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal.png");
+
 TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf", 12);
 TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf", 24);
 TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf", 48);
@@ -97,6 +100,8 @@ Uint32 startTime = 0;
 // load soilder
 std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
 std::vector<Soilder> soilders = loadSoilders(level, soilderTexture);
+std::vector<Tank> loadTanks(int level, SDL_Texture* tex );
+std::vector<Tank> tanks = loadTanks(level, tankTexture);
 std::vector<Soilder> soildersIdle = loadSoilders(level, soilderIdleTexture);
 // load booms
 std::vector<Landmine> landmines;
@@ -132,6 +137,32 @@ std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex )
 
 }
 
+std::vector<Tank> loadTanks(int level, SDL_Texture* tex )
+{
+    int type = -1;
+    std::vector<Tank> temp = {};
+    std::string filepath ="Maps/map";
+    filepath += std::to_string(level) +".txt";
+    std::ifstream Tilemap(filepath);
+    if( Tilemap.fail() )
+    {
+        printf( "Unable to load map file!\n" );
+    }
+    else
+    {
+        for ( int i = 171  ; i < 640 ; i+= 33 )
+            for( int j = 0 ; j < 960 ; j += 32)
+            {
+                Tilemap >> type;
+                if ( type == 2 )
+                    temp.push_back(Tank(Vector2f(j +5,i -  55 ), tex));
+            }
+    }
+    Tilemap.close();
+    return temp;
+
+}
+
 
 
 std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
@@ -150,6 +181,7 @@ void loadlevel( int level )
     window.render(0,0, bgTexture);
     soildersIdle = loadSoilders(level, soilderIdleTexture);
     soilders = loadSoilders(level, soilderTexture);
+    tanks = loadTanks( level, tankTexture);
     soildersRemain = soildersIdle.size();
     camera.x = 0;
     num_mine = soildersRemain + 2;
@@ -182,8 +214,6 @@ const char* getNumMineRemainText(int p_num_mine )
     return s.c_str();
 
 }
-
-
 
 
 void update()
@@ -220,11 +250,18 @@ void update()
     {
 
         SDL_Rect* currentFrame = &runClips[frame / 1000];
+        SDL_Rect* tankFrame = &tankClips[frame/1000];
+
         // watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
         {
             for( Soilder& s : soildersIdle)
                 window.renderFrame(currentFrame,s);
+            for( Tank& t: tanks)
+                {
+                    window.renderFrame( &tankClips[0], t  );
+                    t.set_heal(2);
+                }
             window.renderText(140,130,"The enemies are coming, watch carefully!", font24, white );
 
         }
@@ -286,15 +323,51 @@ void update()
 
         for( Landmine& l : landmines)
             window.render(l);
-
+        // attacking
         if ( SDL_GetTicks() - startTime >  18000)
         {
+
+
             if ( attacking == false )
             {
                 for( Soilder& s : soilders)
-                    s.setPos( s.getPos().x - 300,s.getPos().y  );
+                    s.setPos( s.getPos().x - 300, s.getPos().y  );
+                for( Tank& t : tanks)
+                    t.setPos( t.getPos().x - 300, t.getPos().y  );
                 attacking = true;
             }
+
+            for ( Tank& t: tanks)
+            {
+                std::cout << t.get_heal() << std::endl;
+                if ( t.getDeath() == false)
+                {
+                    t.setVelocity(0.05, 0);
+                    if ( t.getDamage() == true )
+                        window.renderFrame( tankFrame, t);
+                    else
+                        window.renderFrame( &tankClips[0],t );
+
+                    for( Landmine& l : landmines)
+                    {
+
+                        if ( t.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
+                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x )
+                            l.setPos(-100, -100);
+                    }
+
+                }
+
+                else
+                {
+                    t.setVelocity( 0,0 );
+                    window.renderFrame( tankFrame,t );
+
+
+                }
+                t.updateTank(  landmines, heal_point, soildersRemain,deltaTime);
+            }
+
             for( Soilder& s : soilders)
             {
                 s.update(landmines, heal_point, soildersRemain,deltaTime );
@@ -305,6 +378,7 @@ void update()
 
                 else
                 {
+
                     if ( s.animationDone  == false)
                     {
                         s.tempFrame = 6000 ;
@@ -449,14 +523,11 @@ void graphic()
                     status = 0 ;
                     loadlevel(0);
                     level = 0 ;
-                    heal_point =3;
-
                 }
                 else if ( replayInside && event.button.button == SDL_BUTTON_LEFT)
                 {
                     status = 1 ;
                     loadlevel(level);
-                    heal_point =3;
                 }
                 break;
             }
@@ -515,6 +586,7 @@ void starScreen ()
 
     window.clear();
     window.render(0, 0, bgTexture);
+
     bool playInside = false ;
     bool quitInside = false ;
     bool how2playInside = false;
@@ -590,20 +662,24 @@ int main(int argc, char* args[])
 {
 
     setSoilerClip( runClips );
+    setTankClip( tankClips);
     setExploClip( exploClips);
     loadlevel(0);
     frame = 0;
 
     while(gameRunning)
     {
+
         if (status == 0)
             starScreen();
         else
         {
             graphic();
             update();
+
+
         }
-        std::cout << num_mine << std::endl;
+
         frame += int( 8*deltaTime);
 
         if( frame / 1000 >= 5)

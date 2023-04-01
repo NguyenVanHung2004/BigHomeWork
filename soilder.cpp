@@ -3,7 +3,7 @@
 #include"Landmine.h"
 #include<vector>
 
-    Soilder::Soilder(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
+Soilder::Soilder(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
     {
     };
 void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &soildersRemain , double deltaTime)
@@ -11,7 +11,7 @@ void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &s
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
 
     for ( Landmine& l : landmines)
-            if ( getPos().y + 48    >= l.getPos().y - 10  + 12  && getPos().y + 48  <= l.getPos().y  + 20 + 12  && getPos().x + 12 > l.getPos().x)
+            if ( getPos().y +  getCurrentFrame().h   >= l.getPos().y - 10  + 12  && getPos().y + getCurrentFrame().h   <=  l.getPos().y  + 20 + 12  && getPos().x  + 24 > l.getPos().x)
             {
                     if ( getDeath() == false)
                         soildersRemain-= 1;

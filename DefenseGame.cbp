@@ -38,6 +38,8 @@
 		<Unit filename="Landmine.h" />
 		<Unit filename="RenderWindow.cpp" />
 		<Unit filename="RenderWindow.h" />
+		<Unit filename="Tank.cpp" />
+		<Unit filename="Tank.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="soilder.cpp" />
 		<Unit filename="soilder.h" />
