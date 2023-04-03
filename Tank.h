@@ -12,7 +12,7 @@ class Tank : public Soilder
         Tank( Vector2f p_pos, SDL_Texture* p_tex );
         void set_heal( int p_heal );
         int get_heal();
-        void updateTank(std::vector<Landmine> landmines,int &heal_point  , int &soildersRemain , double deltaTime);
+        void updateTank(std::vector<Landmine> landmines,int &heal_point  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion, Mix_Chunk* tankSound );
         bool getDamage();
         void setDamage( bool p_damage);
     private:
@@ -21,5 +21,5 @@ class Tank : public Soilder
 };
 
 
-static SDL_Rect tankClips[ 5 ];
+static SDL_Rect tankClips[ 8 ];
 void setTankClip(SDL_Rect tankClips[] );

@@ -6,7 +6,7 @@
 Soilder::Soilder(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
     {
     };
-void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &soildersRemain , double deltaTime)
+void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &enemiesRemain , double deltaTime , Mix_Chunk* explosion)
     {
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
 
@@ -14,14 +14,17 @@ void  Soilder::update( std::vector<Landmine> landmines,int &heal_point  , int &s
             if ( getPos().y +  getCurrentFrame().h   >= l.getPos().y - 10  + 12  && getPos().y + getCurrentFrame().h   <=  l.getPos().y  + 20 + 12  && getPos().x  + 24 > l.getPos().x)
             {
                     if ( getDeath() == false)
-                        soildersRemain-= 1;
+                        {
+                        enemiesRemain-= 1;
+                        Mix_PlayChannel( -1, explosion,0);
+                        }
                     setDeath ( true );
 
                 }
     if ( getPos().x > 800  && getDeath() == false)
         {
              heal_point-= 1;
-             soildersRemain-=1;
+             enemiesRemain-=1;
              setPos(-100 , -100);
         }
 

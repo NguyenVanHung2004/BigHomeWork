@@ -27,16 +27,29 @@ void Tank::setDamage(bool p_damage)
     damage=  p_damage;
 }
 
-void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &soildersRemain , double deltaTime)
+void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* tankSound)
     {
 
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
+
     if ( getDeath() == false )
-            for ( Landmine& l : landmines)
+           {
+                Mix_PlayChannel(  -1, tankSound , 0);
+               for ( Landmine& l : landmines)
                 if ( getPos().y +  75   >= l.getPos().y - 10  + 12  && getPos().y + 75  <=  l.getPos().y  + 20 + 12
                     && getPos().x + 130 > l.getPos().x)
-                    set_heal(get_heal() -1);
-    if ( get_heal() < 2)
+                    {
+                        set_heal(get_heal() -1);
+                        Mix_HaltChannel( -1 );
+                         std:: cout << 1;
+                        Mix_PlayChannel(  0 , explosion, 0);
+
+                    }
+
+
+
+           }
+    if ( get_heal() < 3 )
             setDamage( true);
     if ( get_heal() == 0)
             setDeath(true);
@@ -44,7 +57,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
     if ( getPos().x > 800  && getDeath() == false)
         {
              heal_point-= 1;
-             soildersRemain-=1;
+             enemiesRemain-=1;
              setPos(-100 , -100);
         }
 
@@ -75,6 +88,21 @@ void setTankClip ( SDL_Rect tankClips[] )
         tankClips[ 4 ].y =   0 ;
         tankClips[ 4 ].w = 192 ;
         tankClips[ 4 ].h = 96 ;
+
+        tankClips[ 5 ].x = 960 ;
+        tankClips[ 5 ].y =   0 ;
+        tankClips[ 5 ].w = 192 ;
+        tankClips[ 5 ].h = 96 ;
+
+        tankClips[ 6 ].x = 1152 ;
+        tankClips[ 6 ].y =   0 ;
+        tankClips[ 6 ].w = 192 ;
+        tankClips[ 6 ].h = 96 ;
+
+        tankClips[ 7 ].x = 1344 ;
+        tankClips[ 7 ].y =   0 ;
+        tankClips[ 7 ].w = 192 ;
+        tankClips[ 7 ].h = 96 ;
 
 
 

@@ -23,7 +23,7 @@ bool init()
         std::cout << "IMG_init has failed. Error: " << SDL_GetError() << std::endl;
     if ((TTF_Init() ))
         std::cout << "TTF_init has failed. Error: " << SDL_GetError() << std::endl;
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 8, 2048);
     return true;
 }
 
@@ -68,7 +68,7 @@ SDL_Texture* nextButtonClickTexture = window.loadTexture("Images/nextButtonClick
 SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
 SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
 SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
-SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal.png");
+SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal2.png");
 
 TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf", 12);
 TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf", 24);
@@ -76,6 +76,7 @@ TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf", 48);
 
 
 Mix_Chunk* explosion = Mix_LoadWAV("Sound/explosion.mp3");
+Mix_Chunk* tankSound = Mix_LoadWAV("Sound/tank1.mp3");
 SDL_Color white = { 255, 255, 255 };
 SDL_Color green = { 0, 255, 0 };
 SDL_Color yellow = { 255,0,0};
@@ -91,7 +92,7 @@ int frame = 0 ;
 int status = 0 ;
 int level = 0;
 int heal_point = 3;
-int soildersRemain = 0 ;
+int enemiesRemain = 0 ;
 bool attacking = false;
 bool displayHow2play = false;
 bool digging = false;
@@ -182,9 +183,9 @@ void loadlevel( int level )
     soildersIdle = loadSoilders(level, soilderIdleTexture);
     soilders = loadSoilders(level, soilderTexture);
     tanks = loadTanks( level, tankTexture);
-    soildersRemain = soildersIdle.size();
+    enemiesRemain = soildersIdle.size();
     camera.x = 0;
-    num_mine = soildersRemain + 2;
+    num_mine = enemiesRemain + 2;
     landmines = loadLandMine(level, landmineTexture );
     explosions = loadLandMine( level, explosionTexture) ;
     startTime = SDL_GetTicks();
@@ -250,7 +251,7 @@ void update()
     {
 
         SDL_Rect* currentFrame = &runClips[frame / 1000];
-        SDL_Rect* tankFrame = &tankClips[frame/1000];
+        SDL_Rect* tankFrame = &tankClips[frame /1000];
 
         // watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
@@ -260,7 +261,7 @@ void update()
             for( Tank& t: tanks)
                 {
                     window.renderFrame( &tankClips[0], t  );
-                    t.set_heal(2);
+                    t.set_heal(3);
                 }
             window.renderText(140,130,"The enemies are coming, watch carefully!", font24, white );
 
@@ -327,7 +328,6 @@ void update()
         if ( SDL_GetTicks() - startTime >  18000)
         {
 
-
             if ( attacking == false )
             {
                 for( Soilder& s : soilders)
@@ -339,38 +339,59 @@ void update()
 
             for ( Tank& t: tanks)
             {
-                std::cout << t.get_heal() << std::endl;
+
+                t.updateTank(  landmines, heal_point, enemiesRemain ,deltaTime , explosion , tankSound);
+
                 if ( t.getDeath() == false)
                 {
                     t.setVelocity(0.05, 0);
                     if ( t.getDamage() == true )
                         window.renderFrame( tankFrame, t);
                     else
-                        window.renderFrame( &tankClips[0],t );
+                        window.renderFrame( &tankClips[0], t );
 
                     for( Landmine& l : landmines)
+                        {
+
+                        if ( t.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
+                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x  )
+                            l.setPos(-100, -100);
+                        }
+
+                }
+                // death
+                else
+                {
+
+                     for( Landmine& l : landmines)
                     {
 
                         if ( t.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
-                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x )
+                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x  )
                             l.setPos(-100, -100);
                     }
+                    if ( t.animationDone == false )
+                           {
+                            t.tempFrame = 5000;
+                            t.animationDone = true ;
 
-                }
-
-                else
-                {
+                           }
+                    t.tempFrame+= int(deltaTime*8);
+                      if ( t.tempFrame/1000 >= 8)
+                            t.tempFrame= 5000;
+                    // std:: cout << t.tempFrame << std:: endl;
                     t.setVelocity( 0,0 );
-                    window.renderFrame( tankFrame,t );
-
+                    window.renderFrame( &tankClips[ t.tempFrame / 1000] ,t );
 
                 }
-                t.updateTank(  landmines, heal_point, soildersRemain,deltaTime);
+               // t.updateTank(  landmines, heal_point, enemiesRemain,deltaTime);
             }
+
+
 
             for( Soilder& s : soilders)
             {
-                s.update(landmines, heal_point, soildersRemain,deltaTime );
+                s.update(landmines, heal_point, enemiesRemain,deltaTime, explosion  );
                 if ( s.getDeath() == false)
                     window.renderFrame(currentFrame,s);
 
@@ -382,7 +403,6 @@ void update()
                     if ( s.animationDone  == false)
                     {
                         s.tempFrame = 6000 ;
-                        Mix_PlayChannel( -1, explosion,0);
                         s.animationDone = true ;
                     }
                     s.setVelocity( 0, 0 );
@@ -397,7 +417,7 @@ void update()
 
                     for( Landmine& l : landmines)
                     {
-                        if ( s.getPos().y + 48    >= l.getPos().y -   10  + 12  &&
+                        if ( s.getPos().y + 48    >= l.getPos().y -  10  + 12  &&
                                 s.getPos().y + 48  <= l.getPos().y  + 20 + 12  && s.getPos().x  + 24 > l.getPos().x)
                             l.setPos(-100, -100);
                     }
@@ -409,7 +429,7 @@ void update()
                 status = -1;
 
             // win status , next level
-            if ( soildersRemain <= 0  && heal_point >= 1)
+            if ( enemiesRemain <= 0  && heal_point >= 1)
             {
                 //   level++;
                 // loadlevel(level);
