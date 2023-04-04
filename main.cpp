@@ -263,8 +263,6 @@ void update()
                     window.renderFrame( &tankClips[0], t  );
                     t.set_heal(3);
                 }
-            window.renderText(140,130,"The enemies are coming, watch carefully!", font24, white );
-
         }
 
         // scrolling screen
@@ -279,9 +277,6 @@ void update()
         // preparing: set position of landmines
         if ( SDL_GetTicks() - startTime >=  8000 && SDL_GetTicks() - startTime <= 18000)
         {
-
-            window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
-            window.render(770, 1, shovelTexture);
             int x,y;
             SDL_GetMouseState( &x, &y);
 
@@ -301,10 +296,9 @@ void update()
                         }
                 }
             }
-            if ( digging )
+            if ( digging && y >= 170 && y  <= 590 && x <= 800 )
             {
                 window.render( x, y  - 40, shovel02Texture);
-                window.render( 770, 1, shovelClickTexture);
                 if ( mouseDown == true )
                 {
                     for( Landmine& l : landmines)
@@ -324,6 +318,9 @@ void update()
 
         for( Landmine& l : landmines)
             window.render(l);
+
+
+
         // attacking
         if ( SDL_GetTicks() - startTime >  18000)
         {
@@ -379,19 +376,18 @@ void update()
                     t.tempFrame+= int(deltaTime*8);
                       if ( t.tempFrame/1000 >= 8)
                             t.tempFrame= 5000;
-                    // std:: cout << t.tempFrame << std:: endl;
+
                     t.setVelocity( 0,0 );
                     window.renderFrame( &tankClips[ t.tempFrame / 1000] ,t );
 
                 }
-               // t.updateTank(  landmines, heal_point, enemiesRemain,deltaTime);
             }
 
 
 
             for( Soilder& s : soilders)
             {
-                s.update(landmines, heal_point, enemiesRemain,deltaTime, explosion  );
+                s.update(landmines , heal_point, enemiesRemain,deltaTime, explosion );
                 if ( s.getDeath() == false)
                     window.renderFrame(currentFrame,s);
 
@@ -424,15 +420,15 @@ void update()
                 }
             }
 
-            //  lose status
+
             if ( heal_point <= 0 )
+                //  lose status
                 status = -1;
 
-            // win status , next level
+
             if ( enemiesRemain <= 0  && heal_point >= 1)
             {
-                //   level++;
-                // loadlevel(level);
+                // next level status
                 status = 2;
             }
 
@@ -443,51 +439,64 @@ void update()
 void graphic()
 {
     window.clear();
-    window.renderBg( bgTexture, &camera);
-    window.render( 5,5, homeButton02Texture);
-    window.renderText( 400, 0, getLevelText(level), font24, white);
-    int x, y;
+     int x, y;
     SDL_GetMouseState(&x, &y);
-    bool home02Inside = false;
-    bool digInside = false;
     if ( status == 1 )
     {
+        window.renderBg( bgTexture, &camera);
+        window.render( 5,5, homeButton02Texture);
+        window.renderText( 400, 0, getLevelText(level), font24, white);
+        bool home02Inside = false;
+        bool digInside = false;
         if  ( x>= 5 && x<= 30 && y >= 5 && y <= 30  )
         {
             home02Inside = true;
             window.render( 5,5, homeButton02ClickTexture);
         }
         if  ( x>= 770 && x<= 810  && y >= 1 && y <= 42   )
-        {
             digInside = true;
-        }
+
+
         if (home02Inside || digInside)
-            while (SDL_PollEvent(&event))
-            {
-                switch(event.type)
+        {
+
+                if ( home02Inside && mouseDown )
                 {
-                case SDL_QUIT:
-                    gameRunning = false;
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    if ( home02Inside && event.button.button == SDL_BUTTON_LEFT)
-                    {
-                        loadlevel(0);
-                        status = 0;
-                    }
-                    else if ( digInside && event.button.button == SDL_BUTTON_LEFT && digging == false)
-                    {
-                        digging = true;
-                    }
-                    else if  ( digInside && event.button.button == SDL_BUTTON_LEFT && digging)
-                    {
-                        digging = false;
-                    }
-                    break;
+                   loadlevel(0);
+                   status = 0 ;
+                   mouseDown = false;
+
                 }
-            }
+                 if ( digInside && digging == false && mouseDown )
+                {
+                    digging = true ;
+                    mouseDown = false;
+
+                }
+                if ( digInside && digging == true   && mouseDown )
+                {
+                    digging = false;
+                    mouseDown = false;
+                }
+
+        }
 
 
+          if ( SDL_GetTicks() - startTime < 7000 )
+        {
+              window.renderText(140,130,"The enemies are coming, watch carefully!", font24, white );
+
+        }
+
+          if ( SDL_GetTicks() - startTime >=  8000 && SDL_GetTicks() - startTime <= 18000)
+        {
+
+            window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, yellow);
+            window.render( 770, 1, shovelTexture);
+            if ( digging )
+                window.render( 770, 1, shovelClickTexture);
+
+        }
         switch( heal_point )
         {
         case 0:
@@ -514,6 +523,7 @@ void graphic()
     }
 
 
+
     if ( status == -1 )
     {
         window.render( 0,0, gameoverTexture);
@@ -530,7 +540,26 @@ void graphic()
         if ( replayInside)
             window.render(500,300, replayButtonClickTexture);
         window.display();
-        while (SDL_PollEvent(&event))
+
+        if ( homeInside && mouseDown )
+        {
+             status = 0 ;
+             level = 0 ;
+             loadlevel(level);
+             mouseDown == false;
+
+        }
+        else if ( replayInside && mouseDown )
+        {
+              status = 1 ;
+            loadlevel(level);
+             mouseDown == false;
+
+        }
+
+
+
+        /*while (SDL_PollEvent(&event))
         {
             switch(event.type)
             {
@@ -541,8 +570,9 @@ void graphic()
                 if ( homeInside && event.button.button == SDL_BUTTON_LEFT)
                 {
                     status = 0 ;
-                    loadlevel(0);
                     level = 0 ;
+                    loadlevel(level);
+
                 }
                 else if ( replayInside && event.button.button == SDL_BUTTON_LEFT)
                 {
@@ -552,6 +582,7 @@ void graphic()
                 break;
             }
         }
+        */
     }
     if ( status == 2 )
     {
@@ -694,8 +725,8 @@ int main(int argc, char* args[])
             starScreen();
         else
         {
-            graphic();
             update();
+            graphic();
 
 
         }

@@ -41,7 +41,6 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
                     {
                         set_heal(get_heal() -1);
                         Mix_HaltChannel( -1 );
-                         std:: cout << 1;
                         Mix_PlayChannel(  0 , explosion, 0);
 
                     }
@@ -58,6 +57,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
         {
              heal_point-= 1;
              enemiesRemain-=1;
+              setDeath(true);
              setPos(-100 , -100);
         }
 
