@@ -20,7 +20,22 @@ void  Soilder::update( std::vector<Landmine> landmines, int &heal_point  , int &
                         }
                     setDeath ( true );
 
+            }
+    if ( getDeath() == true )
+    {
+            if ( animationDone  == false)
+                    {
+                        tempFrame = 6000 ;
+                        animationDone = true ;
+                    }
+            setVelocity( 0, 0 );
+            tempFrame+= int(deltaTime*8);
+            if ( tempFrame/1000 >= 13)
+                {
+                    setPos(-200,-200);
+                    tempFrame= 0;
                 }
+    }
     if ( getPos().x > 700  && getDeath() == false)
         {
              heal_point-= 1;
@@ -52,6 +67,9 @@ bool Soilder:: getDeath()
 {
     return death;
 }
+
+
+
 void setSoilerClip( SDL_Rect runClips[] )
 {
         runClips[ 0 ].x =   0 ;
@@ -123,6 +141,32 @@ void setSoilerClip( SDL_Rect runClips[] )
         runClips[ 13 ].y =   0 ;
         runClips[ 13 ].w =  48 ;
         runClips[ 13 ].h = 48 ;
+
+}
+
+  std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex )
+{
+    int type = -1;
+    std::vector<Soilder> temp = {};
+    std::string filepath ="Maps/map";
+    filepath += std::to_string(level) +".txt";
+    std::ifstream Tilemap(filepath);
+    if( Tilemap.fail() )
+    {
+        printf( "Unable to load map file!\n" );
+    }
+    else
+    {
+        for ( int i = 171  ; i < 640 ; i+= 33 )
+            for( int j = 0 ; j < 960 ; j += 32)
+            {
+                Tilemap >> type;
+                if ( type == 1 )
+                    temp.push_back(Soilder(Vector2f(j +5,i - 15), tex));
+            }
+    }
+    Tilemap.close();
+    return temp;
 
 }
 

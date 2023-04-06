@@ -13,6 +13,7 @@
 #include"soilder.h"
 #include"Landmine.h"
 #include"Tank.h"
+#include"AmouredCar.h"
 
 
 bool init()
@@ -69,6 +70,7 @@ SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
 SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
 SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
 SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal2.png");
+SDL_Texture* amouredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
 
 TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf", 12);
 TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf", 24);
@@ -93,17 +95,21 @@ int status = 0 ;
 int level = 0;
 int heal_point = 3;
 int enemiesRemain = 0 ;
+int tank_max_heal = 3;
+int amouredcar_max_heal =2;
 bool attacking = false;
 bool displayHow2play = false;
 bool digging = false;
 Uint32 startTime = 0;
 
 // load soilder
+std::vector<Soilder> soildersIdle = loadSoilders(level, soilderIdleTexture);
 std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
 std::vector<Soilder> soilders = loadSoilders(level, soilderTexture);
 std::vector<Tank> loadTanks(int level, SDL_Texture* tex );
 std::vector<Tank> tanks = loadTanks(level, tankTexture);
-std::vector<Soilder> soildersIdle = loadSoilders(level, soilderIdleTexture);
+std::vector<AmouredCar> loadAmouredCar(int level, SDL_Texture* tex );
+std::vector<AmouredCar> amouredCars  = loadAmouredCar(level, tankTexture);
 // load booms
 std::vector<Landmine> landmines;
 std::vector<Landmine> explosions ;
@@ -111,60 +117,6 @@ std::vector<Landmine> explosions ;
 Uint64 currentTick = SDL_GetPerformanceCounter();
 Uint64 lastTick = 0;
 double deltaTime = 0;
-
-std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex )
-{
-    int type = -1;
-    std::vector<Soilder> temp = {};
-    std::string filepath ="Maps/map";
-    filepath += std::to_string(level) +".txt";
-    std::ifstream Tilemap(filepath);
-    if( Tilemap.fail() )
-    {
-        printf( "Unable to load map file!\n" );
-    }
-    else
-    {
-        for ( int i = 171  ; i < 640 ; i+= 33 )
-            for( int j = 0 ; j < 960 ; j += 32)
-            {
-                Tilemap >> type;
-                if ( type == 1 )
-                    temp.push_back(Soilder(Vector2f(j +5,i - 15), tex));
-            }
-    }
-    Tilemap.close();
-    return temp;
-
-}
-
-std::vector<Tank> loadTanks(int level, SDL_Texture* tex )
-{
-    int type = -1;
-    std::vector<Tank> temp = {};
-    std::string filepath ="Maps/map";
-    filepath += std::to_string(level) +".txt";
-    std::ifstream Tilemap(filepath);
-    if( Tilemap.fail() )
-    {
-        printf( "Unable to load map file!\n" );
-    }
-    else
-    {
-        for ( int i = 171  ; i < 640 ; i+= 33 )
-            for( int j = 0 ; j < 960 ; j += 32)
-            {
-                Tilemap >> type;
-                if ( type == 2 )
-                    temp.push_back(Tank(Vector2f(j +5,i -  55 ), tex));
-            }
-    }
-    Tilemap.close();
-    return temp;
-
-}
-
-
 
 std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
 {
@@ -183,11 +135,13 @@ void loadlevel( int level )
     soildersIdle = loadSoilders(level, soilderIdleTexture);
     soilders = loadSoilders(level, soilderTexture);
     tanks = loadTanks( level, tankTexture);
-    enemiesRemain = soildersIdle.size();
-    camera.x = 0;
+    amouredCars = loadAmouredCar( level , amouredCarTexure);
+
+    enemiesRemain = soildersIdle.size() + amouredCars.size()*2 + tanks.size() * 3;
     num_mine = enemiesRemain + 2;
     landmines = loadLandMine(level, landmineTexture );
-    explosions = loadLandMine( level, explosionTexture) ;
+    camera.x = 0;
+
     startTime = SDL_GetTicks();
     heal_point = 3;
 
@@ -217,7 +171,7 @@ const char* getNumMineRemainText(int p_num_mine )
 }
 
 
-void update()
+void gameplay()
 {
     lastTick = currentTick;
     currentTick = SDL_GetPerformanceCounter();
@@ -250,14 +204,19 @@ void update()
     if ( status == 1)
     {
 
-        SDL_Rect* currentFrame = &runClips[frame / 1000];
+        SDL_Rect* soilerFrame = &runClips[frame / 1000];
         SDL_Rect* tankFrame = &tankClips[frame /1000];
-
+        SDL_Rect* amouredCarsFrame = &amouredCarClips[frame/1000];
         // watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
         {
             for( Soilder& s : soildersIdle)
-                window.renderFrame(currentFrame,s);
+                window.renderFrame(soilerFrame,s);
+            for ( AmouredCar& a: amouredCars )
+                   {
+                    window.renderFrame( &amouredCarClips[0] , a  );
+                    a.set_heal(2);
+                    }
             for( Tank& t: tanks)
                 {
                     window.renderFrame( &tankClips[0], t  );
@@ -331,17 +290,18 @@ void update()
                     s.setPos( s.getPos().x - 300, s.getPos().y  );
                 for( Tank& t : tanks)
                     t.setPos( t.getPos().x - 300, t.getPos().y  );
+                for( AmouredCar& a : amouredCars)
+                    a.setPos( a.getPos().x - 300, a.getPos().y  );
                 attacking = true;
             }
 
             for ( Tank& t: tanks)
             {
 
-                t.updateTank(  landmines, heal_point, enemiesRemain ,deltaTime , explosion , tankSound);
+                t.updateTank(  landmines, heal_point, tank_max_heal  ,enemiesRemain ,deltaTime , explosion , tankSound);
 
                 if ( t.getDeath() == false)
                 {
-                    t.setVelocity(0.05, 0);
                     if ( t.getDamage() == true )
                         window.renderFrame( tankFrame, t);
                     else
@@ -367,50 +327,60 @@ void update()
                                 t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x  )
                             l.setPos(-100, -100);
                     }
-                    if ( t.animationDone == false )
-                           {
-                            t.tempFrame = 5000;
-                            t.animationDone = true ;
 
-                           }
-                    t.tempFrame+= int(deltaTime*8);
-                      if ( t.tempFrame/1000 >= 8)
-                            t.tempFrame= 5000;
-
-                    t.setVelocity( 0,0 );
                     window.renderFrame( &tankClips[ t.tempFrame / 1000] ,t );
 
                 }
             }
 
+            for ( AmouredCar& a : amouredCars)
+            {
+                a.updateTank( landmines, heal_point, amouredcar_max_heal , enemiesRemain, deltaTime, explosion ,tankSound);
+                if ( a.getDeath() == false)
+                {
+                    if ( a.getDamage() == true )
+                        window.renderFrame( amouredCarsFrame , a);
+                    else
+                        window.renderFrame( &amouredCarClips[0], a );
+                    for( Landmine& l : landmines)
+                        {
+
+                        if ( a.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
+                                a.getPos().y + 75  <= l.getPos().y  + 20 + 12  && a.getPos().x +130  > l.getPos().x  )
+                            l.setPos(-100, -100);
+                        }
+
+                }
+                // death
+                else
+                {
+
+                     for( Landmine& l : landmines)
+                    {
+
+                        if ( a.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
+                                a.getPos().y + 75  <= l.getPos().y  + 20 + 12  && a.getPos().x +130  > l.getPos().x  )
+                            l.setPos(-100, -100);
+                    }
+
+                    window.renderFrame( &amouredCarClips[ a.tempFrame / 1000] ,a  );
+
+                }
+            }
 
 
             for( Soilder& s : soilders)
             {
                 s.update(landmines , heal_point, enemiesRemain,deltaTime, explosion );
                 if ( s.getDeath() == false)
-                    window.renderFrame(currentFrame,s);
+                    window.renderFrame( soilerFrame , s);
 
-                // soilder dead
+                //  death
 
                 else
                 {
 
-                    if ( s.animationDone  == false)
-                    {
-                        s.tempFrame = 6000 ;
-                        s.animationDone = true ;
-                    }
-                    s.setVelocity( 0, 0 );
-                    s.tempFrame+= int(deltaTime*8);
-
                     window.renderFrame( &runClips[ s.tempFrame / 1000],s);
-                    if ( s.tempFrame/1000 >= 13)
-                    {
-                        s.setPos(-200,-200);
-                        s.tempFrame= 0;
-                    }
-
                     for( Landmine& l : landmines)
                     {
                         if ( s.getPos().y + 48    >= l.getPos().y -  10  + 12  &&
@@ -420,12 +390,11 @@ void update()
                 }
             }
 
-
             if ( heal_point <= 0 )
                 //  lose status
                 status = -1;
 
-
+            std::cout << enemiesRemain;
             if ( enemiesRemain <= 0  && heal_point >= 1)
             {
                 // next level status
@@ -439,7 +408,7 @@ void update()
 void graphic()
 {
     window.clear();
-     int x, y;
+    int x, y;
     SDL_GetMouseState(&x, &y);
     if ( status == 1 )
     {
@@ -522,8 +491,6 @@ void graphic()
         }
     }
 
-
-
     if ( status == -1 )
     {
         window.render( 0,0, gameoverTexture);
@@ -557,36 +524,10 @@ void graphic()
 
         }
 
-
-
-        /*while (SDL_PollEvent(&event))
-        {
-            switch(event.type)
-            {
-            case SDL_QUIT:
-                gameRunning = false;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if ( homeInside && event.button.button == SDL_BUTTON_LEFT)
-                {
-                    status = 0 ;
-                    level = 0 ;
-                    loadlevel(level);
-
-                }
-                else if ( replayInside && event.button.button == SDL_BUTTON_LEFT)
-                {
-                    status = 1 ;
-                    loadlevel(level);
-                }
-                break;
-            }
-        }
-        */
     }
     if ( status == 2 )
     {
-
+        window.render(0, 0, bgTexture);
         window.render(  180, 100, levelUpTexture);
         switch( heal_point)
         {
@@ -608,26 +549,12 @@ void graphic()
             nextButtonInside =true;
             window.render( 450, 350,  nextButtonClickTexture);
         }
-        while (SDL_PollEvent(&event))
-        {
-            switch(event.type)
+        if ( nextButtonInside && mouseDown )
             {
-            case SDL_QUIT:
-                gameRunning = false;
-                break;
-            case SDL_MOUSEBUTTONDOWN:
-                if( nextButtonInside && event.button.button ==  SDL_BUTTON_LEFT)
-                {
-                    // next level
-                    level++;
-                    loadlevel(level);
-                    status = 1;
-
-                }
-
-                break;
+                level++;
+                loadlevel( level );
+                status = 1;
             }
-        }
     }
 
 
@@ -714,6 +641,7 @@ int main(int argc, char* args[])
 
     setSoilerClip( runClips );
     setTankClip( tankClips);
+    setAmouredCarClip( amouredCarClips);
     setExploClip( exploClips);
     loadlevel(0);
     frame = 0;
@@ -725,7 +653,7 @@ int main(int argc, char* args[])
             starScreen();
         else
         {
-            update();
+            gameplay();
             graphic();
 
 
@@ -735,7 +663,6 @@ int main(int argc, char* args[])
 
         if( frame / 1000 >= 5)
             frame = 0;
-
 
     }
 

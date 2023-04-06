@@ -27,7 +27,7 @@ void Tank::setDamage(bool p_damage)
     damage=  p_damage;
 }
 
-void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* tankSound)
+void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int max_heal  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* tankSound)
     {
 
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
@@ -35,6 +35,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
     if ( getDeath() == false )
            {
                 Mix_PlayChannel(  -1, tankSound , 0);
+                setVelocity(0.04 , 0);
                for ( Landmine& l : landmines)
                 if ( getPos().y +  75   >= l.getPos().y - 10  + 12  && getPos().y + 75  <=  l.getPos().y  + 20 + 12
                     && getPos().x + 130 > l.getPos().x)
@@ -45,10 +46,25 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
 
                     }
 
-
-
            }
-    if ( get_heal() < 3 )
+    else  // getDeath == true
+        {
+            if ( animationDone == false )
+                           {
+                           tempFrame = 5000;
+                           enemiesRemain-= max_heal ;
+                           animationDone = true ;
+                           }
+                tempFrame+= int(deltaTime*8);
+                if (tempFrame/1000 >= 8)
+                        tempFrame= 5000;
+                if( getVelocity().x < 0.001)
+                        setVelocity( 0,0 );
+                else
+                        setVelocity( getVelocity().x - 0.0001, 0 );
+
+        }
+    if ( get_heal() < max_heal )
             setDamage( true);
     if ( get_heal() == 0)
             setDeath(true);
@@ -62,7 +78,9 @@ void  Tank::updateTank( std::vector<Landmine> landmines,int &heal_point  , int &
         }
 
     }
-void setTankClip ( SDL_Rect tankClips[] )
+
+
+void  setTankClip ( SDL_Rect tankClips[] )
 {
         tankClips[ 0 ].x =   0 ;
         tankClips[ 0 ].y =   0 ;
@@ -103,9 +121,31 @@ void setTankClip ( SDL_Rect tankClips[] )
         tankClips[ 7 ].y =   0 ;
         tankClips[ 7 ].w = 192 ;
         tankClips[ 7 ].h = 96 ;
-
-
-
 }
 
+std::vector<Tank> loadTanks(int level, SDL_Texture* tex )
+{
+    int type = -1;
+    std::vector<Tank> temp = {};
+    std::string filepath ="Maps/map";
+    filepath += std::to_string(level) +".txt";
+    std::ifstream Tilemap(filepath);
+    if( Tilemap.fail() )
+    {
+        printf( "Unable to load map file!\n" );
+    }
+    else
+    {
+        for ( int i = 171  ; i < 640 ; i+= 33 )
+            for( int j = 0 ; j < 960 ; j += 32)
+            {
+                Tilemap >> type;
+                if ( type == 2 )
+                    temp.push_back(Tank(Vector2f(j +5 , i -  55 ), tex));
+            }
+    }
+    Tilemap.close();
+    return temp;
+
+}
 

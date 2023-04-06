@@ -2,7 +2,9 @@
 #include"Entity.h"
 #include"RenderWindow.h"
 #include"Landmine.h"
+
 #include<vector>
+#include <fstream>
 
 
 
@@ -27,3 +29,4 @@ class Soilder : public Entity
 
 static SDL_Rect runClips[ 13 ];
 void setSoilerClip(SDL_Rect runClips[] );
+std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
