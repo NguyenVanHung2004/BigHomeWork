@@ -12,4 +12,4 @@ Bài tập lớn
         xe bọc thép cần ít nhất 2 quả mìn, bạn cũng có thể dùng xẻng để đào và đặt lại những quả mìn đặt sai vị trí.
     - Nếu ít nhất 3 kẻ địch vượt qua, bạn thua.
 5. Cách cài đặt:
-   - Vào mục bin, tải file Install.zip , giải nén, chạy file .exe để chơi.
+   - Vào mục bin, tải file Install.rar , giải nén, chạy file .exe để chơi.
