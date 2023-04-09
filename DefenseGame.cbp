@@ -32,8 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="AmouredCar.cpp" />
-		<Unit filename="AmouredCar.h" />
+		<Unit filename="ArmoredCar.cpp" />
+		<Unit filename="ArmoredCar.h" />
 		<Unit filename="Entity.cpp" />
 		<Unit filename="Entity.h" />
 		<Unit filename="Landmine.cpp" />

@@ -27,15 +27,15 @@ void Tank::setDamage(bool p_damage)
     damage=  p_damage;
 }
 
-void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int max_heal  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* tankSound)
+void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int max_heal  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* Sound)
     {
 
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
 
     if ( getDeath() == false )
            {
-                Mix_PlayChannel(  -1, tankSound , 0);
-                setVelocity(0.04 , 0);
+                Mix_PlayChannel(  -1, Sound , 0);
+                //setVelocity(0.04 , 0);
                for ( Landmine& l : landmines)
                 if ( getPos().y +  75   >= l.getPos().y - 10  + 12  && getPos().y + 75  <=  l.getPos().y  + 20 + 12
                     && getPos().x + 130 > l.getPos().x)
@@ -52,14 +52,14 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
             if ( animationDone == false )
                            {
                            tempFrame = 5000;
-                           enemiesRemain-= max_heal ;
+                           enemiesRemain -= max_heal ;
                            animationDone = true ;
                            }
                 tempFrame+= int(deltaTime*8);
                 if (tempFrame/1000 >= 8)
                         tempFrame= 5000;
                 if( getVelocity().x < 0.001)
-                        setVelocity( 0,0 );
+                        setVelocity( 0, 0 );
                 else
                         setVelocity( getVelocity().x - 0.0001, 0 );
 
@@ -69,11 +69,12 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
     if ( get_heal() == 0)
             setDeath(true);
 
-    if ( getPos().x > 800  && getDeath() == false)
+    if ( getPos().x > 700  && getDeath() == false)
         {
              heal_point-= 1;
              enemiesRemain-=1;
               setDeath(true);
+              Mix_HaltChannel( -1 );
              setPos(-100 , -100);
         }
 

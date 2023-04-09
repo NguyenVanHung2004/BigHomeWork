@@ -13,9 +13,7 @@
 #include"soilder.h"
 #include"Landmine.h"
 #include"Tank.h"
-#include"AmouredCar.h"
-
-
+#include"ArmoredCar.h"
 bool init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -33,44 +31,55 @@ const int SCREEN_WIDTH = 960 ;
 const int SCREEN_HEIGHT = 640 ;
 RenderWindow window("Defense",SCREEN_WIDTH, SCREEN_HEIGHT);
 
-//SDL_Texture* bgTexture =  window.loadTexture("Images/backgroundtemp.png");
+
+// enemies texture
+SDL_Texture* soilderIdleTexture = window.loadTexture("Images/Idle.png");
+SDL_Texture* soilderTexture = window.loadTexture("Images/soilderfinal.png");
+SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal2.png");
+SDL_Texture* armoredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
+
+// gamelay texture
 SDL_Texture* bgTexture =  window.loadTexture("Images/bgtemp.png");
-SDL_Texture* logoTexture =  window.loadTexture("Images/logo.png");
-SDL_Texture* bg01Texture = window.loadTexture("Images/bg03.png");
-SDL_Texture* soilderTexture = window.loadTexture("Images/soilder03.png");
 SDL_Texture* landmineTexture = window.loadTexture("Images/land_mine.png");
 SDL_Texture* landminetempTexture = window.loadTexture("Images/landmineSplash.png");
-SDL_Texture* soilderIdleTexture = window.loadTexture("Images/Idle.png");
+SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
+SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
+SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
 SDL_Texture* explosionTexture = window.loadTexture("Images/explo.png");
-SDL_Texture* playButtonTexture = window.loadTexture("Images/playButton01.png");
-SDL_Texture* playButtonClickTexture= window.loadTexture("Images/playButtonClick01.png");
-SDL_Texture* how2playButtonTexture = window.loadTexture("Images/how2playButton.png");
-SDL_Texture* how2playButtonClickTexture= window.loadTexture("Images/how2playButtonClick.png");
-SDL_Texture* quitButtonTexture= window.loadTexture("Images/quitButton.png");
-SDL_Texture* quitButtonClickTexture= window.loadTexture("Images/quitButtonClick.png");
-SDL_Texture* gameoverTexture = window.loadTexture("Images/gameover03.png");
-SDL_Texture* homeButtonTexture = window.loadTexture("Images/homeButton.png");
-SDL_Texture* replayButtonTexture = window.loadTexture("Images/replayButton.png");
-SDL_Texture* homeButtonClickTexture = window.loadTexture("Images/homeButtonClick.png");
-SDL_Texture* replayButtonClickTexture = window.loadTexture("Images/replayButtonClick.png");
-SDL_Texture* howToPlayTexture = window.loadTexture("Images/how2play01.png");
-SDL_Texture* okButtonTexture = window.loadTexture("Images/okButton.png");
-SDL_Texture* okClickButtonTexture = window.loadTexture("Images/okClickButton.png");
 SDL_Texture* homeButton02Texture = window.loadTexture( "Images/homeButton02.png");
 SDL_Texture* homeButton02ClickTexture = window.loadTexture( "Images/homeButton02Click.png");
 SDL_Texture* heartTexture = window.loadTexture("Images/heart.png");
 SDL_Texture* non_heartTexture = window.loadTexture("Images/heart_non.png");
+
+
+// startscreen texture
+SDL_Texture* bgstartTexture = window.loadTexture("Images/bgStart.png");
+SDL_Texture* logoTexture =  window.loadTexture("Images/logo.png");
+SDL_Texture* playButtonTexture = window.loadTexture("Images/playButton.png");
+SDL_Texture* playButtonClickTexture= window.loadTexture("Images/playButtonClick.png");
+SDL_Texture* howToPlayTexture = window.loadTexture("Images/how2play.png");
+SDL_Texture* how2playButtonTexture = window.loadTexture("Images/how2playButton.png");
+SDL_Texture* how2playButtonClickTexture= window.loadTexture("Images/how2playButtonClick.png");
+SDL_Texture* quitButtonTexture= window.loadTexture("Images/quitButton.png");
+SDL_Texture* quitButtonClickTexture= window.loadTexture("Images/quitButtonClick.png");
+SDL_Texture* gameoverTexture = window.loadTexture("Images/gameover.png");
+SDL_Texture* okButtonTexture = window.loadTexture("Images/okButton.png");
+SDL_Texture* okClickButtonTexture = window.loadTexture("Images/okClickButton.png");
+
+// lose screen texture
+SDL_Texture* homeButtonTexture = window.loadTexture("Images/homeButton.png");
+SDL_Texture* replayButtonTexture = window.loadTexture("Images/replayButton.png");
+SDL_Texture* homeButtonClickTexture = window.loadTexture("Images/homeButtonClick.png");
+SDL_Texture* replayButtonClickTexture = window.loadTexture("Images/replayButtonClick.png");
+SDL_Texture* completeGameTexture = window.loadTexture("Images/completeGame.png");
+
 SDL_Texture* levelUpTexture = window.loadTexture("Images/leveluptemp.png");
 SDL_Texture* star1Texture = window.loadTexture("Images/1star.png");
 SDL_Texture* star2Texture = window.loadTexture("Images/2stars.png");
 SDL_Texture* star3Texture = window.loadTexture("Images/3stars.png");
 SDL_Texture* nextButtonTexture = window.loadTexture("Images/nextButton.png");
 SDL_Texture* nextButtonClickTexture = window.loadTexture("Images/nextButtonClick.png");
-SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
-SDL_Texture* shovelClickTexture = window.loadTexture("Images/ShovelClick.png");
-SDL_Texture* shovel02Texture = window.loadTexture("Images/shovel02.png");
-SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal2.png");
-SDL_Texture* amouredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
+
 
 TTF_Font* font12 = TTF_OpenFont("font/TheKingMaker.ttf", 12);
 TTF_Font* font24 = TTF_OpenFont("font/TheKingMaker.ttf", 24);
@@ -79,6 +88,7 @@ TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf", 48);
 
 Mix_Chunk* explosion = Mix_LoadWAV("Sound/explosion.mp3");
 Mix_Chunk* tankSound = Mix_LoadWAV("Sound/tank1.mp3");
+Mix_Chunk* armoredCarSound  = Mix_LoadWAV("Sound/cartemp.mp3");
 SDL_Color white = { 255, 255, 255 };
 SDL_Color green = { 0, 255, 0 };
 SDL_Color yellow = { 255,0,0};
@@ -88,11 +98,11 @@ SDL_Event event;
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 bool  gameRunning= true ;
 bool mouseDown = false;
-int num_mine = 3 ;
+int num_mine = 0  ;
 int frame = 0 ;
-// status:  0: start screen , 1 : in game ,  2: next level   , -1 : lose ;
+// status:  0: start screen , 1 : in game ,  2: next level   , -1 : lose , 3: complete game ;
 int status = 0 ;
-int level = 0;
+int level = 0 ;
 int heal_point = 3;
 int enemiesRemain = 0 ;
 int tank_max_heal = 3;
@@ -100,6 +110,7 @@ int amouredcar_max_heal =2;
 bool attacking = false;
 bool displayHow2play = false;
 bool digging = false;
+
 Uint32 startTime = 0;
 
 // load soilder
@@ -108,8 +119,8 @@ std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
 std::vector<Soilder> soilders = loadSoilders(level, soilderTexture);
 std::vector<Tank> loadTanks(int level, SDL_Texture* tex );
 std::vector<Tank> tanks = loadTanks(level, tankTexture);
-std::vector<AmouredCar> loadAmouredCar(int level, SDL_Texture* tex );
-std::vector<AmouredCar> amouredCars  = loadAmouredCar(level, tankTexture);
+std::vector<ArmoredCar> loadAmouredCar(int level, SDL_Texture* tex );
+std::vector<ArmoredCar> armoredCars  = loadAmouredCar(level, tankTexture);
 // load booms
 std::vector<Landmine> landmines;
 std::vector<Landmine> explosions ;
@@ -125,8 +136,6 @@ std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
     for (int i = 0 ; i < num_mine +3; i ++)
         temp.push_back( Landmine(Vector2f(-200, -200), tex));
     return temp;
-
-
 }
 void loadlevel( int level )
 {
@@ -135,16 +144,16 @@ void loadlevel( int level )
     soildersIdle = loadSoilders(level, soilderIdleTexture);
     soilders = loadSoilders(level, soilderTexture);
     tanks = loadTanks( level, tankTexture);
-    amouredCars = loadAmouredCar( level , amouredCarTexure);
+    armoredCars = loadAmouredCar( level , armoredCarTexure);
 
-    enemiesRemain = soildersIdle.size() + amouredCars.size()*2 + tanks.size() * 3;
-    num_mine = enemiesRemain + 2;
+    enemiesRemain = soildersIdle.size() + armoredCars.size()*2 + tanks.size()*3;
+    num_mine = enemiesRemain + 1;
     landmines = loadLandMine(level, landmineTexture );
     camera.x = 0;
 
     startTime = SDL_GetTicks();
     heal_point = 3;
-
+    attacking = false;
 
 }
 const char* getLevelText(int level)
@@ -212,7 +221,7 @@ void gameplay()
         {
             for( Soilder& s : soildersIdle)
                 window.renderFrame(soilerFrame,s);
-            for ( AmouredCar& a: amouredCars )
+            for ( ArmoredCar& a: armoredCars )
                    {
                     window.renderFrame( &amouredCarClips[0] , a  );
                     a.set_heal(2);
@@ -233,6 +242,7 @@ void gameplay()
             else camera.x +=  3 ;
             window.renderBg(bgTexture, &camera);
         }
+
         // preparing: set position of landmines
         if ( SDL_GetTicks() - startTime >=  8000 && SDL_GetTicks() - startTime <= 18000)
         {
@@ -289,9 +299,16 @@ void gameplay()
                 for( Soilder& s : soilders)
                     s.setPos( s.getPos().x - 300, s.getPos().y  );
                 for( Tank& t : tanks)
+                    {
                     t.setPos( t.getPos().x - 300, t.getPos().y  );
-                for( AmouredCar& a : amouredCars)
-                    a.setPos( a.getPos().x - 300, a.getPos().y  );
+                    t.setVelocity( 0.03, 0);
+                    }
+                for( ArmoredCar& a : armoredCars)
+                   {
+                        a.setPos( a.getPos().x - 300, a.getPos().y );
+                        a.setVelocity(0.04, 0);
+                   }
+
                 attacking = true;
             }
 
@@ -299,7 +316,6 @@ void gameplay()
             {
 
                 t.updateTank(  landmines, heal_point, tank_max_heal  ,enemiesRemain ,deltaTime , explosion , tankSound);
-
                 if ( t.getDeath() == false)
                 {
                     if ( t.getDamage() == true )
@@ -333,9 +349,9 @@ void gameplay()
                 }
             }
 
-            for ( AmouredCar& a : amouredCars)
+            for ( ArmoredCar& a : armoredCars)
             {
-                a.updateTank( landmines, heal_point, amouredcar_max_heal , enemiesRemain, deltaTime, explosion ,tankSound);
+                a.updateTank( landmines, heal_point, amouredcar_max_heal , enemiesRemain, deltaTime, explosion ,armoredCarSound);
                 if ( a.getDeath() == false)
                 {
                     if ( a.getDamage() == true )
@@ -394,12 +410,13 @@ void gameplay()
                 //  lose status
                 status = -1;
 
-            std::cout << enemiesRemain;
             if ( enemiesRemain <= 0  && heal_point >= 1)
             {
                 // next level status
                 status = 2;
             }
+
+
 
         }
     }
@@ -431,7 +448,7 @@ void graphic()
 
                 if ( home02Inside && mouseDown )
                 {
-                   loadlevel(0);
+                   loadlevel(level);
                    status = 0 ;
                    mouseDown = false;
 
@@ -499,13 +516,15 @@ void graphic()
         bool homeInside = false;
         bool replayInside = false;
         if ( x >= 400 && x <= 450 && y>= 300 && y <= 350 )
+            {
             homeInside = true;
-        if( homeInside)
             window.render(400, 300, homeButtonClickTexture);
+            }
         if ( x >= 500 && x <= 550 && y>= 300 && y <= 350 )
+            {
             replayInside = true ;
-        if ( replayInside)
             window.render(500,300, replayButtonClickTexture);
+            }
         window.display();
 
         if ( homeInside && mouseDown )
@@ -552,9 +571,33 @@ void graphic()
         if ( nextButtonInside && mouseDown )
             {
                 level++;
-                loadlevel( level );
-                status = 1;
+                if ( level <= 8 )
+                {
+                    loadlevel( level );
+                    status = 1;
+                    }
+                else
+                {
+                   status = 3;
+                }
             }
+    }
+    if ( status == 3  )
+    {
+        window.render(0,0 , completeGameTexture);
+        window.renderText(160,450, "You complete the game!", font48 , white);
+        window.render( 450, 530, homeButtonTexture);
+         bool homeInside = false;
+         if ( x >= 450 && x <= 500 && y >= 530 && y <= 580 )
+            {
+            homeInside = true;
+            window.render( 450, 530 , homeButtonClickTexture);
+            }
+        if ( homeInside && mouseDown )
+        {
+            mouseDown = false;
+            status =0;
+        }
     }
 
 
@@ -563,7 +606,7 @@ void starScreen ()
 {
 
     window.clear();
-    window.render(0, 0, bgTexture);
+    window.render(0, 0, bgstartTexture);
 
     bool playInside = false ;
     bool quitInside = false ;
@@ -574,7 +617,7 @@ void starScreen ()
 
     if ( displayHow2play == false)
     {
-        window.render(275, 125 + 4*SDL_sin(SDL_GetTicks()*(3.14/1500)), logoTexture);
+        window.render(250, 125 + 4*SDL_sin(SDL_GetTicks()*(3.14/1500)), logoTexture);
         window.render(400, 220, playButtonTexture);
         window.render(400, 370, quitButtonTexture);
         window.render(400,300,how2playButtonTexture);
@@ -601,11 +644,11 @@ void starScreen ()
     if ( displayHow2play)
     {
         window.render( 200, 150, howToPlayTexture);
-        window.render( 500,400, okButtonTexture);
-        if( x >= 500 && x <= 550 && y >= 400 && y <= 470)
+        window.render( 500,450, okButtonTexture);
+        if( x >= 500 && x <= 550 && y >= 450 && y <= 520)
         {
             okInside = true;
-            window.render( 500, 400, okClickButtonTexture);
+            window.render( 500, 450, okClickButtonTexture);
         }
     }
 
@@ -655,7 +698,6 @@ int main(int argc, char* args[])
         {
             gameplay();
             graphic();
-
 
         }
 

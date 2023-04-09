@@ -95,7 +95,7 @@
 	<vector>
 	<fstream>
 
-1680767651 source:g:\c++\game\defensegame\defensegame\main.cpp
+1681023203 source:g:\c++\game\defensegame\defensegame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -109,9 +109,9 @@
 	"soilder.h"
 	"Landmine.h"
 	"Tank.h"
-	"AmouredCar.h"
+	"ArmoredCar.h"
 
-1680767062 source:g:\c++\game\defensegame\defensegame\tank.cpp
+1681019086 source:g:\c++\game\defensegame\defensegame\tank.cpp
 	<iostream>
 	"Tank.h"
 	"Landmine.h"
@@ -138,4 +138,18 @@
 	"Landmine.h"
 	<vector>
 	<fstream>
+
+1680960564 g:\c++\game\defensegame\defensegame\armoredcar.h
+	"Entity.h"
+	"Tank.h"
+	"RenderWindow.h"
+	"Landmine.h"
+	<vector>
+	<fstream>
+
+1680960567 source:g:\c++\game\defensegame\defensegame\armoredcar.cpp
+	<iostream>
+	"ArmoredCar.h"
+	"Landmine.h"
+	<vector>
 
