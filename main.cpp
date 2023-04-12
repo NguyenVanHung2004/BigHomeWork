@@ -14,6 +14,7 @@
 #include"Landmine.h"
 #include"Tank.h"
 #include"ArmoredCar.h"
+#include"Level.h"
 bool init()
 {
     if (SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -65,7 +66,10 @@ SDL_Texture* quitButtonClickTexture= window.loadTexture("Images/quitButtonClick.
 SDL_Texture* gameoverTexture = window.loadTexture("Images/gameover.png");
 SDL_Texture* okButtonTexture = window.loadTexture("Images/okButton.png");
 SDL_Texture* okClickButtonTexture = window.loadTexture("Images/okClickButton.png");
-
+SDL_Texture* selectlevelButtonTexture = window.loadTexture("Images/selectlevelButton.png");
+SDL_Texture* levelSelectTexture = window.loadTexture("Images/Level-Select.png");
+SDL_Texture* selectlevelButtonClickTexture = window.loadTexture("Images/selectlevelClick.png");
+SDL_Texture* levelLockTexture = window.loadTexture("Images/splash.png");
 // lose screen texture
 SDL_Texture* homeButtonTexture = window.loadTexture("Images/homeButton.png");
 SDL_Texture* replayButtonTexture = window.loadTexture("Images/replayButton.png");
@@ -102,25 +106,27 @@ int num_mine = 0  ;
 int frame = 0 ;
 // status:  0: start screen , 1 : in game ,  2: next level   , -1 : lose , 3: complete game ;
 int status = 0 ;
-int level = 0 ;
+int current_level = 0 ;
+int highest_level = 0 ;
 int heal_point = 3;
 int enemiesRemain = 0 ;
 int tank_max_heal = 3;
 int amouredcar_max_heal =2;
 bool attacking = false;
 bool displayHow2play = false;
+bool displaySelectLevel = false;
 bool digging = false;
 
 Uint32 startTime = 0;
 
 // load soilder
-std::vector<Soilder> soildersIdle = loadSoilders(level, soilderIdleTexture);
-std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
-std::vector<Soilder> soilders = loadSoilders(level, soilderTexture);
-std::vector<Tank> loadTanks(int level, SDL_Texture* tex );
-std::vector<Tank> tanks = loadTanks(level, tankTexture);
-std::vector<ArmoredCar> loadAmouredCar(int level, SDL_Texture* tex );
-std::vector<ArmoredCar> armoredCars  = loadAmouredCar(level, tankTexture);
+std::vector<Soilder> soildersIdle = loadSoilders(current_level, soilderIdleTexture);
+std::vector<Soilder> loadSoilders(int current_level, SDL_Texture* tex );
+std::vector<Soilder> soilders = loadSoilders(current_level, soilderTexture);
+std::vector<Tank> loadTanks(int current_level, SDL_Texture* tex );
+std::vector<Tank> tanks = loadTanks(current_level, tankTexture);
+std::vector<ArmoredCar> loadAmouredCar(int current_level, SDL_Texture* tex );
+std::vector<ArmoredCar> armoredCars  = loadAmouredCar(current_level, tankTexture);
 // load booms
 std::vector<Landmine> landmines;
 std::vector<Landmine> explosions ;
@@ -128,6 +134,9 @@ std::vector<Landmine> explosions ;
 Uint64 currentTick = SDL_GetPerformanceCounter();
 Uint64 lastTick = 0;
 double deltaTime = 0;
+
+std::vector<Level> Selectlevels= loadLevelSelect();
+
 
 std:: vector<Landmine>  loadLandMine(int level, SDL_Texture* tex )
 {
@@ -431,7 +440,7 @@ void graphic()
     {
         window.renderBg( bgTexture, &camera);
         window.render( 5,5, homeButton02Texture);
-        window.renderText( 400, 0, getLevelText(level), font24, white);
+        window.renderText( 400, 0, getLevelText(current_level), font24, white);
         bool home02Inside = false;
         bool digInside = false;
         if  ( x>= 5 && x<= 30 && y >= 5 && y <= 30  )
@@ -448,7 +457,7 @@ void graphic()
 
                 if ( home02Inside && mouseDown )
                 {
-                   loadlevel(level);
+                   loadlevel(current_level);
                    status = 0 ;
                    mouseDown = false;
 
@@ -530,20 +539,21 @@ void graphic()
         if ( homeInside && mouseDown )
         {
              status = 0 ;
-             level = 0 ;
-             loadlevel(level);
+             current_level = 0 ;
+             loadlevel(current_level);
              mouseDown == false;
 
         }
         else if ( replayInside && mouseDown )
         {
               status = 1 ;
-            loadlevel(level);
+            loadlevel(current_level);
              mouseDown == false;
 
         }
 
     }
+    // next level status
     if ( status == 2 )
     {
         window.render(0, 0, bgTexture);
@@ -570,10 +580,12 @@ void graphic()
         }
         if ( nextButtonInside && mouseDown )
             {
-                level++;
-                if ( level <= 8 )
+                current_level++;
+                if ( current_level >= highest_level)
+                    highest_level = current_level;
+                if ( current_level <= 8 )
                 {
-                    loadlevel( level );
+                    loadlevel( current_level );
                     status = 1;
                     }
                 else
@@ -607,51 +619,6 @@ void starScreen ()
 
     window.clear();
     window.render(0, 0, bgstartTexture);
-
-    bool playInside = false ;
-    bool quitInside = false ;
-    bool how2playInside = false;
-    bool okInside = false ;
-    int x, y;
-    SDL_GetMouseState( &x, &y );
-
-    if ( displayHow2play == false)
-    {
-        window.render(250, 125 + 4*SDL_sin(SDL_GetTicks()*(3.14/1500)), logoTexture);
-        window.render(400, 220, playButtonTexture);
-        window.render(400, 370, quitButtonTexture);
-        window.render(400,300,how2playButtonTexture);
-
-
-        if( x >= 400 && x <= 550 && y >= 220 && y <= 280)
-        {
-            playInside = true;
-            window.render(400,220,playButtonClickTexture);
-        }
-
-        if( x >= 400 && x <= 550 && y >= 370 && y <= 530)
-        {
-            quitInside = true;
-            window.render(400,370,quitButtonClickTexture);
-        }
-        if( x >= 400 && x <= 550 && y >= 300 && y <= 360 )
-        {
-            how2playInside = true;
-            window.render(400,300,how2playButtonClickTexture);
-        }
-    }
-
-    if ( displayHow2play)
-    {
-        window.render( 200, 150, howToPlayTexture);
-        window.render( 500,450, okButtonTexture);
-        if( x >= 500 && x <= 550 && y >= 450 && y <= 520)
-        {
-            okInside = true;
-            window.render( 500, 450, okClickButtonTexture);
-        }
-    }
-
     while (SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -660,22 +627,146 @@ void starScreen ()
             gameRunning = false;
             break;
         case SDL_MOUSEBUTTONDOWN:
-
-            if (event.button.button == SDL_BUTTON_LEFT && playInside)
+            if (event.button.button == SDL_BUTTON_LEFT)
             {
-                startTime = SDL_GetTicks();
-                status  =1 ;
-            }
-            if (event.button.button == SDL_BUTTON_LEFT && how2playInside)
-                displayHow2play = true ;
-            if (event.button.button == SDL_BUTTON_LEFT && okInside && displayHow2play)
-                displayHow2play = false;
-            if (event.button.button == SDL_BUTTON_LEFT && quitInside)
-                gameRunning = false;
-            break;
+                mouseDown = true;
 
+            }
+            break;
+        case SDL_MOUSEBUTTONUP:
+            if (event.button.button == SDL_BUTTON_LEFT)
+            {
+                mouseDown = false;
+            }
+            break;
         }
     }
+
+
+
+    bool playInside = false ;
+    bool quitInside = false ;
+    bool selectLevelInside = false;
+    bool how2playInside = false;
+    bool okInside = false ;
+    int x, y;
+    SDL_GetMouseState( &x, &y );
+
+    if ( displayHow2play == false && displaySelectLevel == false )
+    {
+        // window.render(100, 100, levelSelectTexture );
+        window.render(250, 125 + 4*SDL_sin(SDL_GetTicks()*(3.14/1500)), logoTexture);
+        window.render(400, 220, playButtonTexture);
+        window.render(400 , 300 , selectlevelButtonTexture);
+        window.render(400, 380 ,how2playButtonTexture);
+        window.render(400, 460, quitButtonTexture);
+
+        if( x >= 400 && x <= 550 && y >= 220 && y <= 280)
+        {
+            playInside = true;
+            window.render(400, 220, playButtonClickTexture);
+        }
+
+        if( x >= 400 && x <= 550 && y >= 300 && y <= 360 )
+        {
+            selectLevelInside = true;
+            window.render(400,300,  selectlevelButtonClickTexture );
+        }
+        if( x >= 400 && x <= 550 && y >= 380 && y <= 440  )
+        {
+            how2playInside = true;
+            window.render(400, 380, how2playButtonClickTexture);
+        }
+         if( x >= 400 && x <= 550 && y >= 460 && y <= 520  )
+        {
+            quitInside = true;
+            window.render(400,460 ,quitButtonClickTexture);
+        }
+    }
+
+    if ( displayHow2play)
+    {
+        window.render( 180, 150, howToPlayTexture);
+        window.render( 450, 450, okButtonTexture);
+        if( x >= 450 && x <= 500 && y >= 450 && y <= 520)
+        {
+            okInside = true;
+            window.render( 450, 450, okClickButtonTexture);
+        }
+    }
+
+    if ( displaySelectLevel )
+    {
+        window.render(  70 , 50, levelSelectTexture );
+        window.render( 450,450, okButtonTexture);
+
+        if( x >= 450 && x <= 500 && y >= 450 && y <= 520)
+        {
+            okInside = true;
+            window.render( 450 , 450, okClickButtonTexture);
+        }
+        // unlock level
+        for ( int i = 0 ; i < highest_level ; i++)
+            Selectlevels[i].unlock = true;
+        for( Level& l : Selectlevels )
+        {
+            l.onclick = false;
+        }
+        for( Level& l : Selectlevels )
+        {
+            if ( l.unlock == false)
+                window.render( l.getPos().x, l.getPos().y , levelLockTexture);
+            if ( x > l.getPos().x && x < l.getPos().x + 58 &&  y > l.getPos().y && y < l.getPos().y + 58 )
+                l.onclick = true;
+
+            if ( l.onclick && mouseDown &&   l.unlock )
+                {
+                    status =1;
+                    current_level = l.index -1;
+                    loadlevel( current_level );
+                    mouseDown = false;
+                    displaySelectLevel = false;
+                    l.onclick = false;
+                }
+        }
+
+
+    }
+
+    if ( mouseDown && playInside)
+    {
+        startTime = SDL_GetTicks();
+        status  =1 ;
+        mouseDown = false;
+    }
+    if ( mouseDown && how2playInside)
+       {
+        displayHow2play = true ;
+        mouseDown = false;
+        }
+    if (mouseDown && okInside && displayHow2play)
+        {
+            displayHow2play = false;
+            mouseDown = false;
+        }
+    if ( mouseDown && selectLevelInside)
+        {
+            displaySelectLevel = true ;
+            mouseDown = false;
+            }
+    if (mouseDown && okInside && displaySelectLevel)
+            {
+                displaySelectLevel = false;
+                mouseDown = false;
+            }
+    if ( mouseDown && quitInside)
+        {
+            gameRunning = false;
+            mouseDown = false;
+        }
+
+
+
 
     window.display();
 }

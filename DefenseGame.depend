@@ -76,7 +76,7 @@
 	<SDL_ttf.h>
 	"Entity.h"
 
-1680185704 source:g:\c++\game\defensegame\defensegame\renderwindow.cpp
+1681088610 source:g:\c++\game\defensegame\defensegame\renderwindow.cpp
 	<iostream>
 	<SDL.h>
 	"RenderWindow.h"
@@ -95,7 +95,7 @@
 	<vector>
 	<fstream>
 
-1681023203 source:g:\c++\game\defensegame\defensegame\main.cpp
+1681269804 source:g:\c++\game\defensegame\defensegame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -110,6 +110,7 @@
 	"Landmine.h"
 	"Tank.h"
 	"ArmoredCar.h"
+	"Level.h"
 
 1681019086 source:g:\c++\game\defensegame\defensegame\tank.cpp
 	<iostream>
@@ -152,4 +153,12 @@
 	"ArmoredCar.h"
 	"Landmine.h"
 	<vector>
+
+1681269385 source:g:\c++\game\defensegame\defensegame\level.cpp
+	"Level.h"
+
+1681268967 g:\c++\game\defensegame\defensegame\level.h
+	<SDL.h>
+	<vector>
+	"Entity.h"
 

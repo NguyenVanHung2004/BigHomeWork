@@ -38,6 +38,8 @@
 		<Unit filename="Entity.h" />
 		<Unit filename="Landmine.cpp" />
 		<Unit filename="Landmine.h" />
+		<Unit filename="Level.cpp" />
+		<Unit filename="Level.h" />
 		<Unit filename="RenderWindow.cpp" />
 		<Unit filename="RenderWindow.h" />
 		<Unit filename="Tank.cpp" />
