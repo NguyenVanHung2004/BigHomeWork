@@ -69,7 +69,6 @@ bool Soilder:: getDeath()
 }
 
 
-
 void setSoilerClip( SDL_Rect runClips[] )
 {
         runClips[ 0 ].x =   0 ;

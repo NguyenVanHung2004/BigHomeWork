@@ -9,9 +9,10 @@ struct Vector2f
     {
 
     }
-    Vector2f()
-	:x(0.0f), y(0.0f)
-	{}
+    Vector2f():x(0.0f), y(0.0f)
+    {
+
+    }
     float x;
     float y;
 
@@ -34,7 +35,6 @@ class Entity
 
     private:
         Vector2f pos;
-
         SDL_Rect currentFrame;
         SDL_Texture* tex;
 

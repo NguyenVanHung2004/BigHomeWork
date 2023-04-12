@@ -82,7 +82,7 @@
 	"RenderWindow.h"
 	"Entity.h"
 
-1680767659 source:g:\c++\game\defensegame\defensegame\soilder.cpp
+1681298875 source:g:\c++\game\defensegame\defensegame\soilder.cpp
 	<iostream>
 	"soilder.h"
 	"Landmine.h"
@@ -95,7 +95,7 @@
 	<vector>
 	<fstream>
 
-1681269804 source:g:\c++\game\defensegame\defensegame\main.cpp
+1681298919 source:g:\c++\game\defensegame\defensegame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -105,6 +105,7 @@
 	<string>
 	<fstream>
 	"RenderWindow.h"
+	"Global.h"
 	"Entity.h"
 	"soilder.h"
 	"Landmine.h"
@@ -154,11 +155,14 @@
 	"Landmine.h"
 	<vector>
 
-1681269385 source:g:\c++\game\defensegame\defensegame\level.cpp
+1681298490 source:g:\c++\game\defensegame\defensegame\level.cpp
 	"Level.h"
 
 1681268967 g:\c++\game\defensegame\defensegame\level.h
 	<SDL.h>
 	<vector>
 	"Entity.h"
+
+1681298173 g:\c++\game\defensegame\defensegame\global.h
+	"RenderWindow.h"
 

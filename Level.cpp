@@ -22,7 +22,7 @@ std::vector<Level> loadLevelSelect ()
     temp.push_back(Level(Vector2f(267,395),5 ));
     temp.push_back(Level(Vector2f(380,395),6 ));
     temp.push_back(Level(Vector2f(496,395),7 ));
-    temp.push_back(Level(Vector2f(607,396),8 ));
+    temp.push_back(Level(Vector2f(607,395),8 ));
 
     return temp;
 

@@ -36,6 +36,7 @@
 		<Unit filename="ArmoredCar.h" />
 		<Unit filename="Entity.cpp" />
 		<Unit filename="Entity.h" />
+		<Unit filename="Global.h" />
 		<Unit filename="Landmine.cpp" />
 		<Unit filename="Landmine.h" />
 		<Unit filename="Level.cpp" />
