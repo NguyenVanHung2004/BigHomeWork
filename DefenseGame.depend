@@ -53,36 +53,36 @@
 	"RenderWindow.h"
 	<vector>
 
-1678552312 source:g:\c++\game\defensegame\defensegame\entity.cpp
+1681299296 source:g:\c++\game\defensegame\defensegame\entity.cpp
 	"Entity.h"
 	<SDL.h>
 	<SDL_image.h>
 
-1680423286 g:\c++\game\defensegame\defensegame\entity.h
+1681299120 g:\c++\game\defensegame\defensegame\entity.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
 
-1678806604 source:g:\c++\game\defensegame\defensegame\landmine.cpp
+1681488726 source:g:\c++\game\defensegame\defensegame\landmine.cpp
 	"Landmine.h"
 
-1678889949 g:\c++\game\defensegame\defensegame\landmine.h
+1681488726 g:\c++\game\defensegame\defensegame\landmine.h
 	"Entity.h"
 	"RenderWindow.h"
 	<vector>
 
-1680185676 g:\c++\game\defensegame\defensegame\renderwindow.h
+1681486149 g:\c++\game\defensegame\defensegame\renderwindow.h
 	<SDL.h>
 	<SDL_ttf.h>
 	"Entity.h"
 
-1681088610 source:g:\c++\game\defensegame\defensegame\renderwindow.cpp
+1681486498 source:g:\c++\game\defensegame\defensegame\renderwindow.cpp
 	<iostream>
 	<SDL.h>
 	"RenderWindow.h"
 	"Entity.h"
 
-1681298875 source:g:\c++\game\defensegame\defensegame\soilder.cpp
+1681485745 source:g:\c++\game\defensegame\defensegame\soilder.cpp
 	<iostream>
 	"soilder.h"
 	"Landmine.h"
@@ -95,7 +95,7 @@
 	<vector>
 	<fstream>
 
-1681298919 source:g:\c++\game\defensegame\defensegame\main.cpp
+1681486271 source:g:\c++\game\defensegame\defensegame\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -113,19 +113,14 @@
 	"ArmoredCar.h"
 	"Level.h"
 
-1681019086 source:g:\c++\game\defensegame\defensegame\tank.cpp
+1681488487 source:g:\c++\game\defensegame\defensegame\tank.cpp
 	<iostream>
 	"Tank.h"
 	"Landmine.h"
 	<vector>
 
-1680766762 g:\c++\game\defensegame\defensegame\tank.h
-	"Entity.h"
+1681485627 g:\c++\game\defensegame\defensegame\tank.h
 	"Soilder.h"
-	"RenderWindow.h"
-	"Landmine.h"
-	<vector>
-	<fstream>
 
 1680765605 source:g:\c++\game\defensegame\defensegame\amouredcar.cpp
 	<iostream>
@@ -141,13 +136,8 @@
 	<vector>
 	<fstream>
 
-1680960564 g:\c++\game\defensegame\defensegame\armoredcar.h
-	"Entity.h"
+1681485627 g:\c++\game\defensegame\defensegame\armoredcar.h
 	"Tank.h"
-	"RenderWindow.h"
-	"Landmine.h"
-	<vector>
-	<fstream>
 
 1680960567 source:g:\c++\game\defensegame\defensegame\armoredcar.cpp
 	<iostream>
@@ -163,6 +153,6 @@
 	<vector>
 	"Entity.h"
 
-1681298173 g:\c++\game\defensegame\defensegame\global.h
+1681486588 g:\c++\game\defensegame\defensegame\global.h
 	"RenderWindow.h"
 

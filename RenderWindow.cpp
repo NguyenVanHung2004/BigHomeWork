@@ -23,7 +23,7 @@ SDL_Texture* RenderWindow :: loadTexture( const char* file_path)
     texture = IMG_LoadTexture(renderer, file_path);
 
     if ( texture == NULL)
-        std:: cout << "Can't load texture from file ";
+        std:: cout << "Can't load texture from file " << file_path;
     return texture;
 
 }

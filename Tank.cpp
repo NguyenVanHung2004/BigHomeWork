@@ -35,7 +35,6 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
     if ( getDeath() == false )
            {
                 Mix_PlayChannel(  -1, Sound , 0);
-                //setVelocity(0.04 , 0);
                for ( Landmine& l : landmines)
                 if ( getPos().y +  75   >= l.getPos().y - 10  + 12  && getPos().y + 75  <=  l.getPos().y  + 20 + 12
                     && getPos().x + 130 > l.getPos().x)

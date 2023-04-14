@@ -1,11 +1,5 @@
 #pragma once
-#include"Entity.h"
 #include"Soilder.h"
-#include"RenderWindow.h"
-#include"Landmine.h"
-
-#include<vector>
-#include <fstream>
 
 class Tank : public Soilder
 {

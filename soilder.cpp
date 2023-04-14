@@ -36,7 +36,7 @@ void  Soilder::update( std::vector<Landmine> landmines, int &heal_point  , int &
                     tempFrame= 0;
                 }
     }
-    if ( getPos().x > 700  && getDeath() == false)
+    if ( getPos().x > 750  && getDeath() == false)
         {
              heal_point-= 1;
              enemiesRemain-=1;

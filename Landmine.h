@@ -2,6 +2,7 @@
 
 #include"Entity.h"
 #include"RenderWindow.h"
+
 #include<vector>
 
 
@@ -13,8 +14,5 @@ class Landmine  : public Entity
 
     private:
 };
-
-
-static SDL_Rect exploClips[ 6 ];
-void setExploClip(SDL_Rect exploClips[] );
+std:: vector<Landmine>  loadLandMine( SDL_Texture* tex, int num_mine );
 

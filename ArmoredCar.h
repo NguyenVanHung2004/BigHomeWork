@@ -1,12 +1,6 @@
 
 #pragma once
-#include"Entity.h"
 #include"Tank.h"
-#include"RenderWindow.h"
-#include"Landmine.h"
-
-#include<vector>
-#include <fstream>
 
 
 class ArmoredCar : public Tank
