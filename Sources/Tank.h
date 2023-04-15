@@ -1,7 +1,7 @@
 #pragma once
-#include"Soilder.h"
+#include"soldier.h"
 
-class Tank : public Soilder
+class Tank : public Soldier
 {
     public:
         Tank( Vector2f p_pos, SDL_Texture* p_tex );

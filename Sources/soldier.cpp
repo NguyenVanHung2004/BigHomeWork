@@ -1,12 +1,12 @@
 #include<iostream>
-#include"soilder.h"
+#include"soldier.h"
 #include"Landmine.h"
 #include<vector>
 
-Soilder::Soilder(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
+Soldier::Soldier(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
     {
     };
-void  Soilder::update( std::vector<Landmine> landmines, int &heal_point  , int &enemiesRemain , double deltaTime , Mix_Chunk* explosion)
+void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &enemiesRemain , double deltaTime , Mix_Chunk* explosion)
     {
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
 
@@ -50,27 +50,27 @@ void  Soilder::update( std::vector<Landmine> landmines, int &heal_point  , int &
 
 
 
-void Soilder::setVelocity( float x, float y)
+void Soldier::setVelocity( float x, float y)
     {
     velocity.x = x;
     velocity.y = y;
 
     }
-Vector2f Soilder:: getVelocity()
+Vector2f Soldier:: getVelocity()
 {
     return velocity;
 }
-void Soilder:: setDeath(bool  p_death )
+void Soldier:: setDeath(bool  p_death )
 {
     death = p_death;
 }
-bool Soilder:: getDeath()
+bool Soldier:: getDeath()
 {
     return death;
 }
 
 
-void setSoilerClip( SDL_Rect runClips[] )
+void setSoldierClip( SDL_Rect runClips[] )
 {
         runClips[ 0 ].x =   0 ;
         runClips[ 0 ].y =   0 ;
@@ -144,10 +144,10 @@ void setSoilerClip( SDL_Rect runClips[] )
 
 }
 
-  std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex )
+  std::vector<Soldier> loadSoldiers(int level, SDL_Texture* tex )
 {
     int type = -1;
-    std::vector<Soilder> temp = {};
+    std::vector<Soldier> temp = {};
     std::string filepath ="Maps/map";
     filepath += std::to_string(level) +".txt";
     std::ifstream Tilemap(filepath);
@@ -162,7 +162,7 @@ void setSoilerClip( SDL_Rect runClips[] )
             {
                 Tilemap >> type;
                 if ( type == 1 )
-                    temp.push_back(Soilder(Vector2f(j +5,i - 15), tex));
+                    temp.push_back(Soldier(Vector2f(j +5,i - 15), tex));
             }
     }
     Tilemap.close();

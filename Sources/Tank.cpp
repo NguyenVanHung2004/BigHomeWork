@@ -4,7 +4,7 @@
 #include"Landmine.h"
 #include<vector>
 
-Tank::Tank( Vector2f p_pos, SDL_Texture* p_tex) : Soilder(p_pos, p_tex)
+Tank::Tank( Vector2f p_pos, SDL_Texture* p_tex) : Soldier(p_pos, p_tex)
 {
 
 };

@@ -18,8 +18,8 @@ const int SCREEN_HEIGHT = 640 ;
 RenderWindow window("Defense",SCREEN_WIDTH, SCREEN_HEIGHT);
 
 // enemies texture
-SDL_Texture* soilderIdleTexture = window.loadTexture("Images/Idle.png");
-SDL_Texture* soilderTexture = window.loadTexture("Images/soilderfinal.png");
+SDL_Texture* soldierIdleTexture = window.loadTexture("Images/Idle.png");
+SDL_Texture* soldierTexture = window.loadTexture("Images/soilderfinal.png");
 SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal.png");
 SDL_Texture* armoredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
 

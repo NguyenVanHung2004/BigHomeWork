@@ -10,15 +10,15 @@
 #include"RenderWindow.h"
 #include"Global.h"
 #include"Entity.h"
-#include"soilder.h"
+#include"soldier.h"
 #include"Landmine.h"
 #include"Tank.h"
 #include"ArmoredCar.h"
 #include"Level.h"
 
-std::vector<Soilder> soildersIdle = loadSoilders(current_level, soilderIdleTexture);
-std::vector<Soilder> loadSoilders(int current_level, SDL_Texture* tex );
-std::vector<Soilder> soilders = loadSoilders(current_level, soilderTexture);
+std::vector<Soldier> soldiersIdle = loadSoldiers(current_level, soldierIdleTexture);
+std::vector<Soldier> loadSoldiers(int current_level, SDL_Texture* tex );
+std::vector<Soldier> soldiers = loadSoldiers(current_level, soldierTexture);
 
 std::vector<Tank> loadTanks(int current_level, SDL_Texture* tex );
 std::vector<Tank> tanks ;
@@ -63,7 +63,7 @@ void nextLevel();
 void  completeGame();
 int main(int argc, char* args[])
 {
-    setSoilerClip( runClips );
+    setSoldierClip( runClips );
     setTankClip( tankClips);
     setAmouredCarClip( amouredCarClips);
 
@@ -80,7 +80,7 @@ int main(int argc, char* args[])
             graphic();
 
         }
-        std::cout<< enemiesRemain << std::endl;
+
         frame += int( 8*deltaTime);
 
         if( frame / 1000 >= 5)
@@ -95,12 +95,12 @@ void loadlevel( int level )
 {
 
     window.render(0,0, bgTexture);
-    soildersIdle = loadSoilders(level, soilderIdleTexture);
-    soilders = loadSoilders(level, soilderTexture);
+    soldiersIdle = loadSoldiers(level, soldierIdleTexture);
+    soldiers = loadSoldiers(level, soldierTexture);
     tanks = loadTanks( level, tankTexture);
     armoredCars = loadAmouredCar( level , armoredCarTexure);
 
-    enemiesRemain = soildersIdle.size() + armoredCars.size()*2 + tanks.size()*3;
+    enemiesRemain = soldiersIdle.size() + armoredCars.size()*2 + tanks.size()*3;
     num_mine = enemiesRemain + 1;
     landmines = loadLandMine( landmineTexture , num_mine);
     camera.x = 0;
@@ -302,15 +302,15 @@ void gameplay()
     if ( status == 1)
     {
 
-        SDL_Rect* soilerFrame = &runClips[frame / 1000];
+        SDL_Rect* soldierFrame = &runClips[frame / 1000];
         SDL_Rect* tankFrame = &tankClips[frame /1000];
         SDL_Rect* amouredCarsFrame = &amouredCarClips[frame/1000];
 
         // watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
             {
-            for( Soilder& s : soildersIdle)
-                window.renderFrame(soilerFrame,s);
+            for( Soldier& s : soldiersIdle)
+                window.renderFrame(soldierFrame,s);
             for ( ArmoredCar& a: armoredCars )
                    {
                     window.renderFrame( &amouredCarClips[0] , a  );
@@ -384,7 +384,7 @@ void gameplay()
             // set positon of enemies
             if ( attacking == false )
             {
-                for( Soilder& s : soilders)
+                for( Soldier& s : soldiers)
                     s.setPos( s.getPos().x - 300, s.getPos().y  );
                 for( Tank& t : tanks)
                     {
@@ -469,11 +469,11 @@ void gameplay()
             }
 
 
-            for( Soilder& s : soilders)
+            for( Soldier& s : soldiers)
             {
                 s.update(landmines , heal_point, enemiesRemain,deltaTime, explosionSound );
                 if ( s.getDeath() == false)
-                    window.renderFrame( soilerFrame , s);
+                    window.renderFrame( soldierFrame , s);
 
                 //  death
 

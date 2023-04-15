@@ -8,10 +8,10 @@
 
 
 
-class Soilder : public Entity
+class Soldier : public Entity
 {
     public:
-        Soilder(Vector2f p_pos, SDL_Texture* p_tex);
+        Soldier(Vector2f p_pos, SDL_Texture* p_tex);
         void setVelocity( float x, float y);
         Vector2f getVelocity();
         void update( std::vector<Landmine> landmines , int &heal_point, int &enemiesRemain , double deltaTime , Mix_Chunk* explosion);
@@ -28,5 +28,5 @@ class Soilder : public Entity
 
 
 static SDL_Rect runClips[ 13 ];
-void setSoilerClip(SDL_Rect runClips[] );
-std::vector<Soilder> loadSoilders(int level, SDL_Texture* tex );
+void setSoldierClip(SDL_Rect runClips[] );
+std::vector<Soldier> loadSoldiers(int level, SDL_Texture* tex );
