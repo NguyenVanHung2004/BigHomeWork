@@ -70,11 +70,10 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
 
     if ( getPos().x > 700  && getDeath() == false)
         {
-             heal_point-= 1;
-             enemiesRemain-=1;
+             heal_point -= 1;
               setDeath(true);
               Mix_HaltChannel( -1 );
-             setPos(-100 , -100);
+             setPos(-400 , -400);
         }
 
     }

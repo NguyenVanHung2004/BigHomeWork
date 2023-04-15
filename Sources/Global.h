@@ -107,7 +107,7 @@ int heal_point = 3;
 
 int enemiesRemain = 0 ;
 int tank_max_heal = 3;
-int amouredcar_max_heal =2;
+int amouredcar_max_heal = 2;
 
 bool attacking = false;
 bool displayHow2play = false;

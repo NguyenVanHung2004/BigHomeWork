@@ -80,7 +80,7 @@ int main(int argc, char* args[])
             graphic();
 
         }
-
+        std::cout<< enemiesRemain << std::endl;
         frame += int( 8*deltaTime);
 
         if( frame / 1000 >= 5)
@@ -637,7 +637,7 @@ void nextLevel()
                 current_level++;
                 if ( current_level >= highest_level)
                     highest_level = current_level;
-                if ( current_level <= 8 )
+                if ( current_level <= 7  )
                 {
                     loadlevel( current_level );
                     status = 1;  // in game status ( next level)
