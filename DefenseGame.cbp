@@ -46,8 +46,8 @@
 		<Unit filename="Tank.cpp" />
 		<Unit filename="Tank.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="soilder.cpp" />
-		<Unit filename="soilder.h" />
+		<Unit filename="soldier.cpp" />
+		<Unit filename="soldier.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -24,7 +24,7 @@ SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal.png");
 SDL_Texture* armoredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
 
 // gamelay texture
-SDL_Texture* bgTexture =  window.loadTexture("Images/bgtemp.png");
+SDL_Texture* bgTexture =  window.loadTexture("Images/background.png");
 SDL_Texture* landmineTexture = window.loadTexture("Images/land_mine.png");
 SDL_Texture* landminetempTexture = window.loadTexture("Images/landmineSplash.png");
 SDL_Texture* shovelTexture = window.loadTexture("Images/Shovel.png");
@@ -82,9 +82,9 @@ TTF_Font* font48 = TTF_OpenFont("font/TheKingMaker.ttf", 48);
 
 
 Mix_Chunk* explosionSound = Mix_LoadWAV("Sound/explosion.mp3");
-Mix_Chunk* tankSound = Mix_LoadWAV("Sound/tank1.mp3");
-Mix_Chunk* armoredCarSound  = Mix_LoadWAV("Sound/cartemp.mp3");
-
+Mix_Chunk* tankSound = Mix_LoadWAV("Sound/tankSound.mp3");
+Mix_Chunk* armoredCarSound  = Mix_LoadWAV("Sound/carSound.mp3");
+Mix_Chunk* attackSound = Mix_LoadWAV("Sound/attackSound.mp3");
 SDL_Color white = { 255, 255, 255 };
 SDL_Color green = { 0, 255, 0 };
 SDL_Color red = { 255,0,0};

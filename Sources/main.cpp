@@ -60,7 +60,7 @@ void gameplay();
 void graphic();
 void loseScreen();
 void nextLevel();
-void  completeGame();
+void completeGame();
 int main(int argc, char* args[])
 {
     setSoldierClip( runClips );
@@ -175,7 +175,7 @@ void starScreen ()
             window.render(400,450 ,quitButtonClickTexture);
         }
     }
-
+        // how to play screen
     if ( displayHow2play)
     {
         window.render( 180, 150, howToPlayTexture);
@@ -186,7 +186,7 @@ void starScreen ()
             window.render( 450, 450, okClickButtonTexture);
         }
     }
-
+        // select level screen
     if ( displaySelectLevel )
     {
         window.render(  70 , 50, levelSelectTexture );
@@ -218,19 +218,20 @@ void starScreen ()
                     status =1;
                     current_level = l.index -1;
                     loadlevel( current_level );
+                    Mix_PlayChannel(1, attackSound , 0);
                     mouseDown = false;
                     displaySelectLevel = false;
                     l.onclick = false;
                 }
         }
 
-
     }
-
+    // into game
     if ( mouseDown && playInside)
     {
         startTime = SDL_GetTicks();
         status  =1 ;
+        Mix_PlayChannel(1, attackSound , 0);
         mouseDown = false;
     }
     // open how2play screen
@@ -306,7 +307,7 @@ void gameplay()
         SDL_Rect* tankFrame = &tankClips[frame /1000];
         SDL_Rect* amouredCarsFrame = &amouredCarClips[frame/1000];
 
-        // watching enemies
+        // section 1 :watching enemies
         if ( SDL_GetTicks() - startTime < 7000 )
             {
             for( Soldier& s : soldiersIdle)
@@ -333,7 +334,7 @@ void gameplay()
             window.renderBg(bgTexture, &camera);
         }
 
-        // preparing: set position of land-mines
+        // section 2 : preparing  (set position of land-mines)
         if ( SDL_GetTicks() - startTime >=  8000 && SDL_GetTicks() - startTime <= 18000)
         {
             // setting position of landmines
@@ -373,12 +374,12 @@ void gameplay()
 
         }
 
-
+        // render land mines
         for( Landmine& l : landmines)
             window.render(l);
 
 
-        // being attacked by enemies
+        // section 3 : being attacked by enemies
         if ( SDL_GetTicks() - startTime >  18000)
         {
             // set positon of enemies
@@ -610,7 +611,8 @@ void graphic()
 
 void nextLevel()
 {
-    window.render(0, 0, bgTexture);
+        window.render(0, 0, bgTexture);
+        Mix_PlayChannel(1, attackSound , 0);
         window.render(  180, 100, levelUpTexture);
         switch( heal_point)
         {
