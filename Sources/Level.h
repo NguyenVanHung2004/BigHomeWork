@@ -14,7 +14,7 @@ class Level
 
    private:
         Vector2f pos;
-        bool unlock;
+        bool unlock = false ;
     };
 
 std::vector<Level> loadLevelSelect();

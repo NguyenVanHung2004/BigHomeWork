@@ -104,7 +104,7 @@ int frame = 0 ;
 int status = 0 ;
 
 int current_level = 0 ;
-int highest_level = 1 ;
+int highest_level = 0 ;
 int heal_point = 3;
 
 int enemiesRemain = 0 ;

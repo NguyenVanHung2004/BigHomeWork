@@ -186,7 +186,7 @@ void starScreen ()
             window.render( 450 , 450, okClickButtonTexture);
         }
         // unlock level
-        for ( int i = 0 ; i < highest_level ; i++)
+        for ( int i = 0 ; i <= highest_level   ; i++)
             Selectlevels[i].setUnlock(true);
 
         for( Level& l : Selectlevels )
@@ -203,7 +203,7 @@ void starScreen ()
 
             if ( l.onclick && mouseDown &&   l.getUnlock()== true)
                 {
-                    status =1;
+                    status = 1;
                     current_level = l.index -1;
                     loadlevel( current_level );
                     Mix_PlayChannel(1, attackSound , 0);
@@ -523,6 +523,7 @@ void graphic()
 
                 if ( home02Inside && mouseDown )
                 {
+                    Mix_HaltChannel( -1 );
                    loadlevel(current_level);
                    status = 0 ;
                    mouseDown = false;
@@ -602,8 +603,8 @@ void graphic()
 
 void nextLevel()
 {
+        window.clear();
         window.render(0, 0, bgTexture);
-        Mix_PlayChannel(1, attackSound , 0);
         window.render(  180, 100, levelUpTexture);
         switch( heal_point)
         {
@@ -633,6 +634,7 @@ void nextLevel()
                 if ( current_level <= 7  )
                 {
                     loadlevel( current_level );
+                    Mix_PlayChannel(1, attackSound , 0);
                     status = 1;  // in game status ( next level)
                 }
                 else
@@ -643,6 +645,7 @@ void nextLevel()
 }
 void loseScreen()
 {
+        window.clear();
         window.render( 0,0, gameoverTexture);
         window.render( 400, 300, homeButtonTexture);
         window.render( 500, 300, replayButtonTexture);
@@ -679,6 +682,7 @@ void loseScreen()
 }
 void completeGame()
 {
+        window.clear();
         window.render(0,0 , completeGameTexture);
         window.renderText(160,450, "You complete the game!", font48 , white);
         window.render( 450, 530, homeButtonTexture);
