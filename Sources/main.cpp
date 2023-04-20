@@ -16,28 +16,52 @@
 #include"ArmoredCar.h"
 #include"Level.h"
 
-std::vector<Soldier> soldiersIdle = loadSoldiers(current_level, soldierIdleTexture);
-std::vector<Soldier> loadSoldiers(int current_level, SDL_Texture* tex );
-std::vector<Soldier> soldiers = loadSoldiers(current_level, soldierTexture);
-
-std::vector<Tank> loadTanks(int current_level, SDL_Texture* tex );
-std::vector<Tank> tanks ;
-
-std::vector<ArmoredCar> loadAmouredCar(int current_level, SDL_Texture* tex );
-std::vector<ArmoredCar> armoredCars  ;
-
-// load booms
+std::vector<Soldier> soldiersIdle;
+std::vector<Soldier> soldiers;
+std::vector<Tank> tanks;
+std::vector<ArmoredCar> armoredCars;
 std::vector<Landmine> landmines;
-std:: vector<Landmine>  loadLandMine( SDL_Texture* tex, int num_mine );
+std::vector<Level> Selectlevels = loadLevelSelect();
 
-std::vector<Level> Selectlevels= loadLevelSelect();
+const char* getLevelText( int level );
+const char* getAlertText ( int time );
+const char* getNumMineRemainText( int p_num_mine );
 
+void loadlevel( int level );
+void starScreen();
+void gameplay();
+void graphic();
+void loseScreen();
+void nextLevel();
+void completeGame();
+
+int main(int argc, char* args[])
+{
+    setSoldierClip( soldierClips );
+    setTankClip( tankClips);
+    setAmouredCarClip( amouredCarClips);
+    loadlevel(0);
+
+    while(gameRunning)
+    {
+
+        if (status == 0)
+            starScreen();
+        else
+        {
+            gameplay();
+            graphic();
+
+        }
+
+    }
+    return 0;
+}
 const char* getLevelText(int level)
 {
     std::string s = std::to_string(level +1 );
     s = "Level: " + s;
     return s.c_str();
-
 }
 const char* getAlertText ( int time )
 {
@@ -53,42 +77,6 @@ const char* getNumMineRemainText(int p_num_mine )
     s = "x" + s;
     return s.c_str();
 
-}
-void loadlevel( int level );
-void starScreen();
-void gameplay();
-void graphic();
-void loseScreen();
-void nextLevel();
-void completeGame();
-int main(int argc, char* args[])
-{
-    setSoldierClip( runClips );
-    setTankClip( tankClips);
-    setAmouredCarClip( amouredCarClips);
-
-    loadlevel(0);
-
-    while(gameRunning)
-    {
-
-        if (status == 0)
-            starScreen();
-        else
-        {
-            gameplay();
-            graphic();
-
-        }
-
-        frame += int( 8*deltaTime);
-
-        if( frame / 1000 >= 5)
-            frame = 0;
-
-    }
-
-    return 0;
 }
 
 void loadlevel( int level )
@@ -199,7 +187,7 @@ void starScreen ()
         }
         // unlock level
         for ( int i = 0 ; i < highest_level ; i++)
-            Selectlevels[i].unlock = true;
+            Selectlevels[i].setUnlock(true);
 
         for( Level& l : Selectlevels )
         {
@@ -207,13 +195,13 @@ void starScreen ()
         }
         for( Level& l : Selectlevels )
         {
-            if ( l.unlock == false)
+            if ( l.getUnlock() == false)
                 window.render( l.getPos().x, l.getPos().y , levelLockTexture);
 
             if ( mousePosX > l.getPos().x && mousePosX < l.getPos().x + 58 &&  mousePosY > l.getPos().y && mousePosY < l.getPos().y + 58 )
                 l.onclick = true;
 
-            if ( l.onclick && mouseDown &&   l.unlock )
+            if ( l.onclick && mouseDown &&   l.getUnlock()== true)
                 {
                     status =1;
                     current_level = l.index -1;
@@ -275,6 +263,10 @@ void gameplay()
     currentTick = SDL_GetPerformanceCounter();
     deltaTime = (double)((currentTick - lastTick)*1000 / (double)SDL_GetPerformanceFrequency() );
 
+    frame += int( 8*deltaTime);
+    if( frame / 1000 >= 5)
+        frame = 0;
+
     while (SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -302,8 +294,8 @@ void gameplay()
     // game play = 3 section : watching enemies , preparing , being attacked
     if ( status == 1)
     {
-
-        SDL_Rect* soldierFrame = &runClips[frame / 1000];
+        SDL_Rect* soldierIdleFrame = &soldierClips[frame / 1000];
+        SDL_Rect* soldierRunFrame = &soldierClips[frame/ 850];
         SDL_Rect* tankFrame = &tankClips[frame /1000];
         SDL_Rect* amouredCarsFrame = &amouredCarClips[frame/1000];
 
@@ -311,7 +303,7 @@ void gameplay()
         if ( SDL_GetTicks() - startTime < 7000 )
             {
             for( Soldier& s : soldiersIdle)
-                window.renderFrame(soldierFrame,s);
+                window.renderFrame( soldierIdleFrame , s);
             for ( ArmoredCar& a: armoredCars )
                    {
                     window.renderFrame( &amouredCarClips[0] , a  );
@@ -397,7 +389,6 @@ void gameplay()
                     a.setPos( a.getPos().x - 300, a.getPos().y );
                     a.setVelocity(0.04, 0);
                    }
-
                 attacking = true;
             }
 
@@ -443,9 +434,9 @@ void gameplay()
                         window.renderFrame( amouredCarsFrame , a);
                     else
                         window.renderFrame( &amouredCarClips[0], a );
+
                     for( Landmine& l : landmines)
                         {
-
                         if ( a.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
                                 a.getPos().y + 75  <= l.getPos().y  + 20 + 12  && a.getPos().x +130  > l.getPos().x  )
                             l.setPos(-100, -100);
@@ -474,14 +465,14 @@ void gameplay()
             {
                 s.update(landmines , heal_point, enemiesRemain,deltaTime, explosionSound );
                 if ( s.getDeath() == false)
-                    window.renderFrame( soldierFrame , s);
+                    window.renderFrame( soldierRunFrame , s);
 
                 //  death
 
                 else
                 {
 
-                    window.renderFrame( &runClips[ s.tempFrame / 1000],s);
+                    window.renderFrame( &soldierClips[ s.tempFrame / 1000],s);
                     for( Landmine& l : landmines)
                     {
                         if ( s.getPos().y + 48    >= l.getPos().y -  10  + 12  &&
@@ -551,7 +542,6 @@ void graphic()
 
         }
 
-
           if ( SDL_GetTicks() - startTime < 7000 )
         {
               window.renderText(140,130,"The enemies are coming, watch carefully!", font24, red );
@@ -562,9 +552,10 @@ void graphic()
         {
 
             window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, red);
-            window.render( 770, 1, shovelTexture);
             if ( digging )
                 window.render( 770, 1, shovelClickTexture);
+            else
+                 window.render( 770, 1, shovelTexture);
 
         }
         switch( heal_point )

@@ -85,6 +85,8 @@ Mix_Chunk* explosionSound = Mix_LoadWAV("Sound/explosion.mp3");
 Mix_Chunk* tankSound = Mix_LoadWAV("Sound/tankSound.mp3");
 Mix_Chunk* armoredCarSound  = Mix_LoadWAV("Sound/carSound.mp3");
 Mix_Chunk* attackSound = Mix_LoadWAV("Sound/attackSound.mp3");
+
+
 SDL_Color white = { 255, 255, 255 };
 SDL_Color green = { 0, 255, 0 };
 SDL_Color red = { 255,0,0};

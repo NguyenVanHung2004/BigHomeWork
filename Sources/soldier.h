@@ -27,6 +27,6 @@ class Soldier : public Entity
 };
 
 
-static SDL_Rect runClips[ 13 ];
-void setSoldierClip(SDL_Rect runClips[] );
+static SDL_Rect soldierClips[ 13 ];
+void setSoldierClip(SDL_Rect soldierClips[] );
 std::vector<Soldier> loadSoldiers(int level, SDL_Texture* tex );

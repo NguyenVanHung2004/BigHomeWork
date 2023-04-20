@@ -5,13 +5,16 @@
 class Level
 {
    public:
-    Level(Vector2f p_pos , int index);
-    Vector2f getPos();
-    bool onclick =false;
-    bool unlock = false;
-    int index;
+        Level(Vector2f p_pos , int index);
+        Vector2f getPos();
+        bool onclick =false;
+        int index;
+        void setUnlock (bool p_unlock);
+        bool getUnlock ();
+
    private:
-    Vector2f pos;
+        Vector2f pos;
+        bool unlock;
     };
 
 std::vector<Level> loadLevelSelect();

@@ -6,6 +6,14 @@ Level::Level(Vector2f p_pos, int p_index)
     pos = p_pos;
     index = p_index;
 }
+void Level::setUnlock( bool p_unlock)
+{
+    unlock = p_unlock;
+}
+bool Level::getUnlock()
+{
+    return unlock;
+}
 Vector2f Level::getPos()
 {
     return pos;
