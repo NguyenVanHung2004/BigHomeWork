@@ -11,7 +11,6 @@ ArmoredCar:: ArmoredCar ( Vector2f p_pos , SDL_Texture* p_tex) : Tank(p_pos, p_t
 }
 
 
-
 std::vector<ArmoredCar> loadAmouredCar ( int level, SDL_Texture* tex )
 {
     int type = -1;

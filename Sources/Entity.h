@@ -21,16 +21,11 @@ class Entity
 {
     public:
         Entity( Vector2f p_pos ,SDL_Texture* p_tex );
-        Vector2f& getPos()
-        {
-            return pos;
-        }
-
         SDL_Rect getCurrentFrame();
+
         void setPos(float x, float y);
-        void setVelocity (float x, float y);
-        Vector2f setVelocity();
-        Vector2f getVelocity();
+        Vector2f getPos();
+
         SDL_Texture* getTex();
 
     private:
