@@ -89,11 +89,14 @@ void loadlevel( int level )
     armoredCars = loadAmouredCar( level , armoredCarTexure);
 
     enemiesRemain = soldiersIdle.size() + armoredCars.size()*2 + tanks.size()*3;
+
     num_mine = enemiesRemain + 1;
     landmines = loadLandMine( landmineTexture , num_mine);
+
     camera.x = 0;
     startTime = SDL_GetTicks();
     heal_point = 3;
+    digging = false;
     attacking = false;
 
 }
