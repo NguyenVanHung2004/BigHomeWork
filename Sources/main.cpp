@@ -322,11 +322,10 @@ void gameplay()
         // scrolling screen
         if ( SDL_GetTicks() - startTime >=  7000 && SDL_GetTicks() - startTime <=  8000)
         {
-
-            if( camera.x == 960 )
+            if( camera.x >= 960 )
                 camera.x= 960;
-            else camera.x +=  3 ;
-            window.renderBg(bgTexture, &camera);
+            else camera.x +=  3*deltaTime;
+
         }
 
         // section 2 : preparing  (set position of land-mines)
