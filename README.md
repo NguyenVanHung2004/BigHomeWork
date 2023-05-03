@@ -10,6 +10,7 @@ Bài tập lớn
     - Bắt đầu level, bạn sẽ có 7 giây để quan sát vị trí và loại kẻ địch, hãy cố gắng ghi nhớ chúng .
     - Sau đó, bạn có 10 giây để đặt mìn . Lưu ý: xe tăng cần ít nhất 3 quả mìn để phá hủy , 
         xe bọc thép cần ít nhất 2 quả mìn, bạn cũng có thể dùng xẻng để đào và đặt lại những quả mìn đặt sai vị trí.
-    - Nếu ít nhất 3 kẻ địch vượt qua, bạn thua.
+    - Nếu ít nhất 3 kẻ địch vượt qua, bạn thua.    
 5. Cách cài đặt:
-   - Vào mục bin, tải file Install.rar , giải nén, chạy file .exe để chơi.
+   - Vào mục bin, tải file Install.zip , giải nén, chạy file .exe để chơi.
+6. Video Demo : https://youtu.be/rQkEEj_AHXY
