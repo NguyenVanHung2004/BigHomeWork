@@ -376,7 +376,7 @@ void gameplay()
         // section 3 : being attacked by enemies
         if ( SDL_GetTicks() - startTime >  18000)
         {
-            // set positon of enemies
+            // set pos of enemies
             if ( attacking == false )
             {
                 for( Soldier& s : soldiers)
@@ -553,7 +553,7 @@ void graphic()
 
           if ( SDL_GetTicks() - startTime >=  8000 && SDL_GetTicks() - startTime <= 18000)
         {
-
+            camera.x= 960;
             window.renderText( 200,130, getAlertText( int ( 17 - (SDL_GetTicks() - startTime)/1000)), font24, red);
             if ( digging )
                 window.render( 770, 1, shovelClickTexture);
@@ -676,6 +676,7 @@ void loseScreen()
         else if ( replayInside && mouseDown )
         {
             status = 1 ;
+            Mix_PlayChannel(1, attackSound , 0);
             loadlevel(current_level);
              mouseDown = false;
 

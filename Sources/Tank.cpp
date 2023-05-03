@@ -70,7 +70,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
 
     if ( getPos().x > 700  && getDeath() == false)
         {
-             heal_point -= 1;
+            heal_point -= 1;
               setDeath(true);
               Mix_HaltChannel( -1 );
              setPos(-400 , -400);
@@ -80,7 +80,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
 
 
 void  setTankClip ( SDL_Rect tankClips[] )
-{
+{       // clip[0] : normal, clip 1-> 4 : damaged, clip 5->7 : death
         tankClips[ 0 ].x =   0 ;
         tankClips[ 0 ].y =   0 ;
         tankClips[ 0 ].w =  192 ;

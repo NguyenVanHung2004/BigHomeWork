@@ -23,6 +23,7 @@ SDL_Texture* soldierTexture = window.loadTexture("Images/soilderfinal.png");
 SDL_Texture* tankTexture = window.loadTexture("Images/tankfinal.png");
 SDL_Texture* armoredCarTexure = window.loadTexture("Images/AmouredCarSprite.png");
 
+
 // gamelay texture
 SDL_Texture* bgTexture =  window.loadTexture("Images/background.png");
 SDL_Texture* landmineTexture = window.loadTexture("Images/land_mine.png");
@@ -90,7 +91,6 @@ Mix_Chunk* attackSound = Mix_LoadWAV("Sound/attackSound.mp3");
 SDL_Color white = { 255, 255, 255 };
 SDL_Color green = { 0, 255, 0 };
 SDL_Color red = { 255,0,0};
-
 
 
 // global  variables

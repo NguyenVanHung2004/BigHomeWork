@@ -39,7 +39,8 @@ std::vector<ArmoredCar> loadAmouredCar ( int level, SDL_Texture* tex )
 
 
 void setAmouredCarClip ( SDL_Rect amouredCarClips[] )
-{
+{       // clip[0] : normal, clip 1-> 4 : damaged, clip 5->7 : death
+
         amouredCarClips[ 0 ].x =   0 ;
         amouredCarClips[ 0 ].y =   0 ;
         amouredCarClips[ 0 ].w =  160  ;

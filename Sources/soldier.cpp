@@ -33,7 +33,7 @@ void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &
             if ( tempFrame/1000 >= 13)
                 {
                     setPos(-200,-200);
-                    tempFrame= 0;
+                    tempFrame = 0;
                 }
     }
     if ( getPos().x > 750  && getDeath() == false)
@@ -42,6 +42,7 @@ void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &
              heal_point-= 1;
              enemiesRemain-=1;
              setPos(-100 , -100);
+             setVelocity( 0, 0 );
         }
 
 
