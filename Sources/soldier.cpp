@@ -6,7 +6,7 @@
 Soldier::Soldier(Vector2f p_pos ,SDL_Texture* p_tex) : Entity(p_pos,p_tex)
     {
     };
-void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &enemiesRemain , double deltaTime , Mix_Chunk* explosion)
+void  Soldier::update( std::vector<Landmine>& landmines, int &heal_point  , int &enemiesRemain , double deltaTime , Mix_Chunk* explosion)
     {
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
 
@@ -19,6 +19,7 @@ void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &
                         Mix_PlayChannel( 2, explosion,0);
                         }
                     setDeath ( true );
+                    l.setPos(-100,-100);
 
             }
     if ( getDeath() == true )
@@ -44,7 +45,6 @@ void  Soldier::update( std::vector<Landmine> landmines, int &heal_point  , int &
              setPos(-100 , -100);
              setVelocity( 0, 0 );
         }
-
 
 
     }

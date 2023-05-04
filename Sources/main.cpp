@@ -404,25 +404,10 @@ void gameplay()
                         window.renderFrame( tankFrame, t);
                     else
                         window.renderFrame( &tankClips[0], t );
-
-                    for( Landmine& l : landmines)
-                        {
-
-                        if ( t.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
-                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x  )
-                            l.setPos(-100, -100);
-                        }
                 }
                 // death
                 else
                 {
-                     for( Landmine& l : landmines)
-                    {
-
-                        if ( t.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
-                                t.getPos().y + 75  <= l.getPos().y  + 20 + 12  && t.getPos().x +130  > l.getPos().x  )
-                            l.setPos(-100, -100);
-                    }
                     window.renderFrame( &tankClips[ t.tempFrame / 1000] ,t );
                 }
             }
@@ -437,25 +422,10 @@ void gameplay()
                     else
                         window.renderFrame( &amouredCarClips[0], a );
 
-                    for( Landmine& l : landmines)
-                        {
-                        if ( a.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
-                                a.getPos().y + 75  <= l.getPos().y  + 20 + 12  && a.getPos().x +130  > l.getPos().x  )
-                            l.setPos(-100, -100);
-                        }
-
                 }
                 // death
                 else
                 {
-
-                     for( Landmine& l : landmines)
-                    {
-
-                        if ( a.getPos().y + 75    >= l.getPos().y  -   10  + 12  &&
-                                a.getPos().y + 75  <= l.getPos().y  + 20 + 12  && a.getPos().x +130  > l.getPos().x  )
-                            l.setPos(-100, -100);
-                    }
 
                     window.renderFrame( &amouredCarClips[ a.tempFrame / 1000] ,a  );
 
@@ -473,14 +443,8 @@ void gameplay()
 
                 else
                 {
-
                     window.renderFrame( &soldierClips[ s.tempFrame / 1000],s);
-                    for( Landmine& l : landmines)
-                    {
-                        if ( s.getPos().y + 48    >= l.getPos().y -  10  + 12  &&
-                                s.getPos().y + 48  <= l.getPos().y  + 20 + 12  && s.getPos().x  + 24 > l.getPos().x)
-                            l.setPos(-100, -100);
-                    }
+
                 }
             }
 

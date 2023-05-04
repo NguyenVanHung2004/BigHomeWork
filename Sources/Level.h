@@ -7,7 +7,7 @@ class Level
    public:
         Level(Vector2f p_pos , int index);
         Vector2f getPos();
-        bool onclick =false;
+        bool onclick = false;
         int index;
         void setUnlock (bool p_unlock);
         bool getUnlock ();

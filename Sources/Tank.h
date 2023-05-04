@@ -7,7 +7,7 @@ class Tank : public Soldier
         Tank( Vector2f p_pos, SDL_Texture* p_tex );
         void set_heal( int p_heal );
         int get_heal();
-        void updateTank(std::vector<Landmine> landmines,int &heal_point ,int max_heal , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion, Mix_Chunk* tankSound );
+        void updateTank(std::vector<Landmine>& landmines,int &heal_point ,int max_heal , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion, Mix_Chunk* tankSound );
         bool getDamage();
         void setDamage( bool p_damage);
     private:

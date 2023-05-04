@@ -27,7 +27,7 @@ void Tank::setDamage(bool p_damage)
     damage=  p_damage;
 }
 
-void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int max_heal  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* Sound)
+void  Tank::updateTank( std::vector<Landmine>& landmines, int &heal_point, int max_heal  , int &enemiesRemain , double deltaTime ,Mix_Chunk* explosion , Mix_Chunk* Sound)
     {
 
     setPos( getPos().x + getVelocity().x*deltaTime*2 , getPos().y + getVelocity().y*deltaTime*2 );
@@ -42,6 +42,7 @@ void  Tank::updateTank( std::vector<Landmine> landmines, int &heal_point, int ma
                         set_heal(get_heal() -1);
                         Mix_HaltChannel( -1 );
                         Mix_PlayChannel(  0 , explosion, 0);
+                        l.setPos(-100,-100);
 
                     }
 
